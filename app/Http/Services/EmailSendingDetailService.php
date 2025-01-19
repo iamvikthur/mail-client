@@ -21,7 +21,7 @@ class EmailSendingDetailService
         $user = User::find($authenticatable->id)->first();
         $this->user = $user;
     }
-    public function createDetails(array $userDetails): array
+    public function createDetail(array $userDetails): array
     {
         $this->user->emailSendingDetails()->create($userDetails);
         $this->user->load("emailSendingDetails");
@@ -29,7 +29,7 @@ class EmailSendingDetailService
         return [true, "Email sending details saved", [$userDetails], 200];
     }
 
-    public function showAll(array $array)
+    public function showAll()
     {
 
         $emailSendingDetails = $this->user->emailSendingDetails;
@@ -44,7 +44,7 @@ class EmailSendingDetailService
         return [true, "Email sending detail updated", [$emailSendingDetail], 200];
     }
 
-    public function deleteDetails(EmailSendingDetail $emailSendingDetail)
+    public function destroyDetails(EmailSendingDetail $emailSendingDetail)
     {
         $this->user->emailSendingDetails()->find($emailSendingDetail->id)->delete();
 
