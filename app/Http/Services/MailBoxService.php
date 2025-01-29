@@ -3,11 +3,12 @@
 namespace App\Http\Services;
 
 use App\Models\EmailSendingDetail;
+use App\Models\MailBox;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
-class EmailSendingDetailService
+class MailBoxService
 {
     private User $user;
     public function __construct()
@@ -37,17 +38,17 @@ class EmailSendingDetailService
         return [true, "Email sending detail updated", $emailSendingDetails, 200];
     }
 
-    public function updateDetails(EmailSendingDetail $emailSendingDetail, array $updatedData)
+    public function updateDetails(MailBox $mailBox, array $updatedData)
     {
-        $emailSendingDetail->update($updatedData);
+        $mailBox->update($updatedData);
 
-        return [true, "Email sending detail updated", [$emailSendingDetail], 200];
+        return [true, "Email sending detail updated", [$mailBox], 200];
     }
 
-    public function destroyDetails(EmailSendingDetail $emailSendingDetail)
+    public function destroyDetails(MailBox $mailBox)
     {
-        $this->user->emailSendingDetails()->find($emailSendingDetail->id)->delete();
+        $this->user->emailSendingDetails()->find($mailBox->id)->delete();
 
-        return [true, "Email sending detail deleted", [$emailSendingDetail], 200];
+        return [true, "Email sending detail deleted", [$mailBox], 200];
     }
 }

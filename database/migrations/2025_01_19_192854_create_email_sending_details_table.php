@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('email_sending_details', function (Blueprint $table) {
+        Schema::create('mail_boxes', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('user_id');
             $table->string('name_tag');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('email_sending_details');
+        Schema::dropIfExists('mail_boxes');
     }
 };
