@@ -24,16 +24,16 @@ class MailBoxRequest extends FormRequest
         $routeName = $this->route()->getName();
 
         $rules = match ($routeName) {
-            "email_sending_details.store" => [
+            "mailbox.store" => [
                 "name_tag" => ["required", "string", "max:255"],
                 "host" => ["required", "string", "url"],
                 "port" => ["required", "string", "max:10"],
                 "username" => ["required", "string"],
                 "password" => ["required", "string"],
-                "encryption" => ["required", "string"],
+                "encryption" => ["sometimes", "string"],
                 "meta" => ["sometimes", "array"],
             ],
-            "email_sending_details.update" => [
+            "mailbox.update" => [
                 "name_tag" => ["sometimes", "string", "max:255"],
                 "host" => ["sometimes", "string", "url"],
                 "port" => ["sometimes", "string", "max:10"],

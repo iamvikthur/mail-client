@@ -8,47 +8,41 @@ use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
-class MailBoxService
+class MailBoxService extends Base
 {
-    private User $user;
     public function __construct()
     {
-        $authenticatable = Auth::user();
-
-        if ($authenticatable == null) {
-            throw new AuthenticationException("This service requires an authenticated user");
-        }
-
-        $user = User::find($authenticatable->id)->first();
-        $this->user = $user;
-    }
-    public function createDetail(array $userDetails): array
-    {
-        $this->user->emailSendingDetails()->create($userDetails);
-        $this->user->load("emailSendingDetails");
-
-        return [true, "Email sending details saved", [$userDetails], 200];
+        parent::__construct();
     }
 
-    public function showAll()
+    public function create_mailbox(array $mailbox): array
     {
+        $this->user->mailBoxes()->create($mailbox);
 
-        $emailSendingDetails = $this->user->emailSendingDetails;
+        $mailbox = $this->user->load("mailboxes");
 
-        return [true, "Email sending detail updated", $emailSendingDetails, 200];
+        return [true, MCH_model_created("Mailbox"), [$mailbox], 200];
     }
 
-    public function updateDetails(MailBox $mailBox, array $updatedData)
+    public function show_all()
     {
-        $mailBox->update($updatedData);
 
-        return [true, "Email sending detail updated", [$mailBox], 200];
+        $mailboxes = $this->user->mailBoxes;
+
+        return [true, MCH_model_retrieved("Mailboxes"), $mailboxes, 200];
     }
 
-    public function destroyDetails(MailBox $mailBox)
+    public function update_mailbox(MailBox $mailBox, array $updateData)
     {
-        $this->user->emailSendingDetails()->find($mailBox->id)->delete();
+        $updatedMailbox = $mailBox->update($updateData);
 
-        return [true, "Email sending detail deleted", [$mailBox], 200];
+        return [true, MCH_model_updated("Mailbox"), [$updatedMailbox], 200];
+    }
+
+    public function delete_mailbox(MailBox $mailBox)
+    {
+        $mailBox->delete();
+
+        return [true, MCH_model_deleted("Mailbox"), [], 200];
     }
 }

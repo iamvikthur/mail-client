@@ -49,8 +49,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function emailSendingDetails(): HasMany
+    public function mailBoxes(): HasMany
     {
-        return $this->hasMany(EmailSendingDetail::class);
+        return $this->hasMany(MailBox::class);
+    }
+
+    public function contactFolders(): HasMany
+    {
+        return $this->hasMany(ContactFolder::class);
     }
 }

@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mail_boxes', function (Blueprint $table) {
+        Schema::create('contacts', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->string('name_tag');
-            $table->string('host');
-            $table->string('port');
-            $table->string('username');
-            $table->string('password');
-            $table->string('encryption')->nullable();
+            $table->foreignUlid('contact_list_id')->references('id')->on('contact_lists')->cascadeOnDelete();
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('email')->unique();
             $table->json('meta')->nullable();
             $table->timestamps();
         });
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mail_boxes');
+        Schema::dropIfExists('contacts');
     }
 };

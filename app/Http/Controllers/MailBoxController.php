@@ -15,7 +15,7 @@ class MailBoxController extends Controller
      */
     public function index()
     {
-        $response = $this->mailBoxService->showAll();
+        $response = $this->mailBoxService->show_all();
         return $response;
     }
 
@@ -32,7 +32,7 @@ class MailBoxController extends Controller
      */
     public function store(MailBoxRequest $mailBoxRequest)
     {
-        $response = $this->mailBoxService->createDetail(
+        $response = $this->mailBoxService->create_mailbox(
             $mailBoxRequest->validated()
         );
         return $response;
@@ -59,7 +59,7 @@ class MailBoxController extends Controller
      */
     public function update(MailBoxRequest $mailBoxRequest, MailBox $mailBox)
     {
-        $response = $this->mailBoxService->updateDetails(
+        $response = $this->mailBoxService->update_mailbox(
             $mailBox,
             $mailBoxRequest->validated()
         );
@@ -71,7 +71,7 @@ class MailBoxController extends Controller
      */
     public function destroy(MailBox $mailBox)
     {
-        $response = $this->mailBoxService->destroyDetails($mailBox);
+        $response = $this->mailBoxService->delete_mailbox($mailBox);
         return $response;
     }
 }
