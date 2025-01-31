@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use App\Models\ContactFolder;
 use App\Models\ContactList;
@@ -23,7 +23,7 @@ class ContactListService extends Base
     {
         $contactLists = $contactFolder->contactLists;
 
-        return [true, MCH_model_retrieved("Contact list"), $contactLists, 200];
+        return [true, MCH_model_retrieved("Contact lists"), $contactLists, 200];
     }
 
     public function update_contact_list(ContactList $contactList, array $data)

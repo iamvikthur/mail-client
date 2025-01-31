@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use App\Models\ContactFolder;
 
@@ -22,7 +22,7 @@ class ContactFolderService extends Base
     {
         $folders = $this->user->contactFolders;
 
-        return [true, MCH_model_retrieved("Contact folder"), $folders, 200];
+        return [true, MCH_model_retrieved("Contact folders"), $folders, 200];
     }
 
     public function update_folder(ContactFolder $contactFolder, array $data)

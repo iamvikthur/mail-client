@@ -58,4 +58,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(ContactFolder::class);
     }
+
+    public function templates(): HasMany
+    {
+        return $this->hasMany(Template::class);
+    }
+
+    public function campaigns(): HasMany
+    {
+        return $this->hasMany(Campaign::class);
+    }
 }

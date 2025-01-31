@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactListRequest;
-use App\Http\Services\ContactListService;
+use App\Services\ContactListService;
 use App\Models\ContactFolder;
 use App\Models\ContactList;
 use Illuminate\Http\Request;

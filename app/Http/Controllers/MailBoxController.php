@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MailBoxRequest;
-use App\Http\Services\MailBoxService;
+use App\Services\MailBoxService;
 use App\Models\MailBox;
-use Illuminate\Http\Request;
 
 class MailBoxController extends Controller
 {
