@@ -25,9 +25,10 @@ class ContactRequest extends FormRequest
 
         $rules = match ($routeName) {
             "contact.store" => [
-                "firstname" => ["required", "string", "max:255"],
-                "lastname" => ["required", "string", "max:255"],
-                "email" => ["required", "string", "email", "unique:contacts"],
+                "firstname" => ["required_without:contact_file", "string", "max:255"],
+                "lastname" => ["required_without:contact_file", "string", "max:255"],
+                "email" => ["required_without:contact_file", "string", "email", "unique:contacts"],
+                "contact_file" => ["required_with_all:firstname,lastname,email", "file", "mimes:csv,xlsx"],
                 "meta" => ["sometimes", "array"]
             ],
 

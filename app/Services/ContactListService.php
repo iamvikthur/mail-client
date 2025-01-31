@@ -16,7 +16,7 @@ class ContactListService extends Base
     {
         $contactList = $contactFolder->contactLists()->create($data);
 
-        return [true, MCH_model_created("Contact list"), [$contactList], 200];
+        return [true, MCH_model_created("Contact list"), $contactList, 200];
     }
 
     public function show_all_contact_lists(ContactFolder $contactFolder): array
