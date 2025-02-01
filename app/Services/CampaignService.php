@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Campaign;
+use Illuminate\Support\Str;
 
 class CampaignService extends Base
 {
@@ -16,6 +17,8 @@ class CampaignService extends Base
         $contactListIds = $data["contact_list_ids"];
 
         unset($data["contact_list_ids"]);
+
+        $data['slug'] = $this->generateUniqueSlug($data['name'], new Campaign());
 
         $campaign = $this->user->campaigns()->create($data);
 

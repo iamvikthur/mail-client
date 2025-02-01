@@ -15,7 +15,9 @@ return new class extends Migration
         Schema::create('templates', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->string('name');
+            $table->string('title');
+            $table->string('slug');
+            $table->text('description')->nullable();
             $table->longText('template');
             $table->enum(
                 'privacy',

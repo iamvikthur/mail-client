@@ -13,6 +13,8 @@ class TemplateService extends Base
 
     public function create_template(array $data)
     {
+        $data['slug'] = $this->generateUniqueSlug($data['name'], new Template());
+
         $template = $this->user->templates()->create($data);
 
         return [true, MCH_model_created("Template"), [$template], 200];

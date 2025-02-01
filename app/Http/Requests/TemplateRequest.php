@@ -27,15 +27,17 @@ class TemplateRequest extends FormRequest
 
         $rules = match ($routeName) {
             "template.store" => [
-                "name" => ["required", "string", "max:255"],
+                "title" => ["required", "string", "max:255"],
                 "template" => ["required", "string"],
+                "description" => ["sometimes", "string"],
                 "privacy" => ["sometimes", "string", Rule::enum(TemplatePrivacyEnum::class)],
                 "meta" => ["sometimes", "array"]
             ],
 
             "template.update" => [
-                "name" => ["sometimes", "string", "max:255"],
+                "title" => ["sometimes", "string", "max:255"],
                 "template" => ["sometimes", "string"],
+                "description" => ["sometimes", "string"],
                 "privacy" => ["sometimes", "string", Rule::enum(TemplatePrivacyEnum::class)],
                 "meta" => ["sometimes", "array"]
             ],

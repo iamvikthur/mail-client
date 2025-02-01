@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\MailboxStateEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,10 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->string('encryption')->nullable();
+            $table->enum('state', [
+                MailboxStateEnum::ONLINE->value,
+                MailboxStateEnum::OFFLINE->value
+            ])->default(MailboxStateEnum::OFFLINE->value);
             $table->json('meta')->nullable();
             $table->timestamps();
         });

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreignUlid('template_id')->references('id')->on('templates')->cascadeOnDelete();
             $table->string('name');
+            $table->string('slug');
+            $table->text('description')->nullable();
             $table->string('subject');
             $table->dateTime('send_time');
             $table->enum('status', [

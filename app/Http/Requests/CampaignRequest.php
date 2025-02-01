@@ -28,6 +28,7 @@ class CampaignRequest extends FormRequest
         $rules = match ($routeName) {
             "campaign.store" => [
                 "name" => ["required", "string", "max:255"],
+                "description" => ["sometimes", "string"],
                 "subject" => ["required", "string"],
                 "send_time" => ["required", "date_format:Y-m-d H:i:s"],
                 "template_id" => ["required", "string", "exists:templates,id"],
@@ -38,6 +39,7 @@ class CampaignRequest extends FormRequest
 
             "campaign.update" => [
                 "name" => ["sometimes", "string", "max:255"],
+                "description" => ["sometimes", "string"],
                 "subject" => ["sometimes", "string"],
                 "send_time" => ["sometimes", "date_format:Y-m-d H:i:s"],
                 "template_id" => ["sometimes", "string", "exists:templates,id"],
