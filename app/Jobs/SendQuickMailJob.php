@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\QuickMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Mail;
 
 class SendQuickMailJob implements ShouldQueue
 {
@@ -29,6 +28,8 @@ class SendQuickMailJob implements ShouldQueue
     {
         $mailBox = $this->quickMail->mailbox;
         $maxSendPerHour = $mailbox->meta->max_send ?? $this->defaultMaxSendPerHour;
+        $delayBetweenBatches = 60;
+        $delay = max(0, now()->diffInSeconds($this->quickMail->send_time, false));
         $recipients = collect();
         $subject = $this->quickMail->subject;
         $content = "";
@@ -68,6 +69,12 @@ class SendQuickMailJob implements ShouldQueue
             'content' => $content,
         ];
 
-        // Mail::build($smtpConfig)->to($recipients)->send()
+
+        $chunks = array_chunk($recipients, $maxSendPerHour);
+
+        foreach ($chunks as $index => $emailBatch) {
+            SendEmailBatchJob::dispatch($smtpConfig, $this->quickMail, $emailBatch, $emailData)
+                ->delay(now()->addMinutes($index * $delayBetweenBatches));
+        }
     }
 }
