@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignUlid('template_id')->nullable()->references('id')->on('templates')->cascadeOnDelete();
             $table->string('subject');
             $table->longText('body')->nullable();
-            $table->json('recipients');
-            $table->dateTime('sendTime');
+            $table->json('recipients')->nullable();
+            $table->dateTime('send_time')->default(now());
             $table->enum('state', [
                 QuickMailStateEnum::DORMANT->value,
                 QuickMailStateEnum::INQUEUE->value,

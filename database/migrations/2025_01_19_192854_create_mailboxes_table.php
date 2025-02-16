@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('mail_boxes', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->string('name_tag');
+            $table->string('title');
             $table->string('host');
             $table->string('port');
             $table->string('username');

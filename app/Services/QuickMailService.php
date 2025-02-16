@@ -13,12 +13,15 @@ class QuickMailService extends Base
 
     public function create_quick_mail(array $data)
     {
-        if ($this->canUseTemplate($data['template_id'])) {
-            $quickMail = $this->user->quickMails()->create($data);
-            return [true, MCH_model_created("Quick mail"), [$quickMail], 200];
-        } else {
-            throw new \Exception('You are not authorized to use this template');
+        if (isset($data['template_id'])) {
+            if (!$this->canUseTemplate($data['template_id'])) {
+                throw new \Exception('You are not authorized to use this template');
+            }
         }
+
+        $quickMail = $this->user->quickMails()->create($data);
+
+        return [true, MCH_model_created("Quick mail"), [$quickMail], 200];
     }
 
     public function show_all_quick_mails()

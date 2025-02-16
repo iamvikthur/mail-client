@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create("campaign_contact_list", function (Blueprint $table) {
-            $table->foreignUlid('campaign_id')->references('id')->on('campaigns')->cascadeOnDelete();
+        Schema::create("contact_list_quick_mail", function (Blueprint $table) {
+            $table->foreignUlid('quick_mail_id')->references('id')->on('campaigns')->cascadeOnDelete();
             $table->foreignUlid('contact_list_id')->references('id')->on('contact_lists')->cascadeOnDelete();
-            $table->primary(['campaign_id', 'contact_list_id']);
+            $table->primary(['quick_mail_id', 'contact_list_id']);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('campaign_contact_list');
+        Schema::dropIfExists('contact_list_quick_mail');
     }
 };

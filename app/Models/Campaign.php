@@ -22,6 +22,6 @@ class Campaign extends Model
 
     public function contactLists(): BelongsToMany
     {
-        return $this->belongsToMany(ContactList::class, "campaign_contact_list", "", "");
+        return $this->belongsToMany(ContactList::class, "campaign_contact_list");
     }
 }

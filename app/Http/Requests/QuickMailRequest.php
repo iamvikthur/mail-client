@@ -31,8 +31,9 @@ class QuickMailRequest extends FormRequest
                 "template_id" => ["required_without:body", "string", "exists:templates,id"],
                 "subject" => ["required", "string", "max:255"],
                 "body" => ["required_without:template_id", "string"],
-                "recipients" => ["required", "string"],
-                "sentTime" => ["required", "date_format:Y-m-d H:i:s"],
+                "recipients" => ["required_without:contact_list_id", "string"],
+                "contact_list_id" => ["required_without:recipients", "string"],
+                "send_ime" => ["sometimes", "date_format:Y-m-d H:i:s"],
                 "state" => ["sometimes", Rule::enum(QuickMailStateEnum::class)],
                 "meta" => ["sometimes", "array"],
             ],
@@ -43,7 +44,8 @@ class QuickMailRequest extends FormRequest
                 "subject" => ["sometimes", "string", "max:255"],
                 "body" => ["sometimes", "string"],
                 "recipients" => ["sometimes", "string"],
-                "sentTime" => ["sometimes", "date_format:Y-m-d H:i:s"],
+                "contact_list_id" => ["sometimes", "string"],
+                "send_ime" => ["sometimes", "date_format:Y-m-d H:i:s"],
                 "state" => ["sometimes", Rule::enum(QuickMailStateEnum::class)],
                 "meta" => ["sometimes", "array"],
             ],
@@ -52,5 +54,17 @@ class QuickMailRequest extends FormRequest
         };
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            "recipients.required" => "Please provide a list of recipients or a contact list",
+            "contact_list_id.required" => "Please provide a list of recipients or a contact list",
+            "mailbox_id.required" => "Please provide provide a maibox to use for sending this mail",
+            "template_id.required" => "Please provide the mailbody or choose a template",
+            "subject.required" => "The field subject is required",
+            "subject.string" => "The subject string must be a string"
+        ];
     }
 }

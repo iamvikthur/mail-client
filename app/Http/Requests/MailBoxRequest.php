@@ -25,7 +25,7 @@ class MailBoxRequest extends FormRequest
 
         $rules = match ($routeName) {
             "mailbox.store" => [
-                "name_tag" => ["required", "string", "max:255"],
+                "title" => ["required", "string", "max:255"],
                 "host" => ["required", "string", "url"],
                 "port" => ["required", "string", "max:10"],
                 "username" => ["required", "string"],
@@ -34,7 +34,7 @@ class MailBoxRequest extends FormRequest
                 "meta" => ["sometimes", "array"],
             ],
             "mailbox.update" => [
-                "name_tag" => ["sometimes", "string", "max:255"],
+                "title" => ["sometimes", "string", "max:255"],
                 "host" => ["sometimes", "string", "url"],
                 "port" => ["sometimes", "string", "max:10"],
                 "username" => ["sometimes", "string"],
