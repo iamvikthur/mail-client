@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CampaignStatusEnum;
+use App\Jobs\DispatchCampaignMailJob;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,5 +42,7 @@ class Campaign extends Model
     public function publish_campaign()
     {
         if ($this->status !== CampaignStatusEnum::PUBLISHED) return;
+
+        dispatch(new DispatchCampaignMailJob($this));
     }
 }
