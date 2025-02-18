@@ -39,6 +39,11 @@ class Campaign extends Model
         return $this->belongsToMany(ContactList::class, "campaign_contact_list");
     }
 
+    public function attachments()
+    {
+        return $this->morphMany(EmailAttachment::class, "attachmentable");
+    }
+
     public function publish_campaign()
     {
         if ($this->status !== CampaignStatusEnum::PUBLISHED) return;

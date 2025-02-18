@@ -16,17 +16,18 @@ class SendEmailBatchJob implements ShouldQueue
     private array $smtpConfig;
     private QuickMail $quickMail;
     private array $recipients;
-
     private array $emailData;
+    private array $attachments;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(array $smtpConfig, array $recipients, array $emailData)
+    public function __construct(array $smtpConfig, array $recipients, array $emailData, array $attachments)
     {
         $this->smtpConfig = $smtpConfig;
         $this->recipients = $recipients;
         $this->emailData = $emailData;
+        $this->attachments = $attachments;
     }
 
     /**
@@ -36,6 +37,6 @@ class SendEmailBatchJob implements ShouldQueue
     {
         Mail::build($this->smtpConfig)
             ->to($this->recipients)
-            ->send(new QuickMailable($this->emailData));
+            ->send(new QuickMailable($this->emailData, $this->attachments));
     }
 }

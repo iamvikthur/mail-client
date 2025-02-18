@@ -14,15 +14,17 @@ class DispatchCampaignEmailBatchJob implements ShouldQueue
     private array $smtpConfig;
     private array $recipients;
     private array $emailData;
+    private array $attachments;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(array $smtpConfig, array $recipients, array $emailData)
+    public function __construct(array $smtpConfig, array $recipients, array $emailData, array $attachments)
     {
         $this->smtpConfig = $smtpConfig;
         $this->recipients = $recipients;
         $this->emailData = $emailData;
+        $this->attachments = $attachments;
     }
 
     /**

@@ -29,6 +29,7 @@ class DispatchCampaignMailJob implements ShouldQueue
         $maxSendPerHour = $mailbox->meta->max_send ?? $this->defaultMaxSendPerHour;
         $delayBetweenBatches = 60;
         $sendTime = max(0, now()->diffInSeconds($this->campaign->send_time, false));
+        $attachments = $this->campaign->attachments()->pluck('attachments')->toArray();
 
         $smtpConfig = [
             'transport'  => 'smtp',
@@ -57,7 +58,7 @@ class DispatchCampaignMailJob implements ShouldQueue
         foreach ($chunks as $index => $chunk) {
             $batchSendTime = max($sendTime, now())->addMinutes($index * $delayBetweenBatches);
 
-            SendEmailBatchJob::dispatch($smtpConfig, $chunk, $emailData)
+            DispatchCampaignEmailBatchJob::dispatch($smtpConfig, $chunk, $emailData, $attachments)
                 ->delay($batchSendTime);
         }
     }

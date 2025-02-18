@@ -30,6 +30,7 @@ class SendQuickMailJob implements ShouldQueue
         $maxSendPerHour = $mailbox->meta->max_send ?? $this->defaultMaxSendPerHour;
         $delayBetweenBatches = 60;
         $sendTime = max(0, now()->diffInSeconds($this->quickMail->send_time, false));
+        $attachments = $this->quickMail->attachments()->pluck('attachments')->toArray();
         $recipients = collect();
         $subject = $this->quickMail->subject;
         $content = "";
@@ -75,7 +76,7 @@ class SendQuickMailJob implements ShouldQueue
         foreach ($chunks as $index => $emailBatch) {
             $batchSendTime = max($sendTime, now())->addMinutes($index * $delayBetweenBatches);
 
-            SendEmailBatchJob::dispatch($smtpConfig, $emailBatch, $emailData)
+            SendEmailBatchJob::dispatch($smtpConfig, $emailBatch, $emailData, $attachments)
                 ->delay($batchSendTime);
         }
     }

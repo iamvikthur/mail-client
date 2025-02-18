@@ -42,4 +42,9 @@ class QuickMail extends Model
     {
         return $this->belongsToMany(ContactList::class, "contact_list_quick_mail");
     }
+
+    public function attachmentable()
+    {
+        return $this->morphToMany(EmailAttachment::class, "attachmentable");
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -15,14 +16,16 @@ class CampaignMailable extends Mailable
 
     public $subject;
     public $content;
+    protected $attachments;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $emailData)
+    public function __construct(array $emailData, array $attachments)
     {
         $this->subject = $emailData['subject'];
         $this->content = $emailData['content'];
+        $this->attachments = $attachments;
     }
 
     /**
@@ -52,6 +55,6 @@ class CampaignMailable extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return array_map(fn($file) => Attachment::fromStorageDisk('s3', $file), $this->attachments);
     }
 }
