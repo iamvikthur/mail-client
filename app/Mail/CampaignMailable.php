@@ -9,12 +9,12 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class QuickMailable extends Mailable
+class CampaignMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $subject;
-    public string $content;
+    public $subject;
+    public $content;
 
     /**
      * Create a new message instance.
@@ -41,7 +41,7 @@ class QuickMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            html: $this->content
+            html: $this->content,
         );
     }
 

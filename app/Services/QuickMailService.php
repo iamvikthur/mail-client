@@ -38,9 +38,11 @@ class QuickMailService extends Base
             }
         }
 
-        $updatedQuickMail = $quickMail->update($data);
+        $quickMail->update($data);
 
-        return [true, MCH_model_updated("Quick mail"), [$updatedQuickMail], 200];
+        $quickMail->refresh();
+
+        return [true, MCH_model_updated("Quick mail"), [$quickMail], 200];
     }
 
     public function delete_quick_mail(QuickMail $quickMail)

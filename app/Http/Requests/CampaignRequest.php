@@ -31,7 +31,7 @@ class CampaignRequest extends FormRequest
                 "description" => ["sometimes", "string"],
                 "subject" => ["required", "string"],
                 "send_time" => ["required", "date_format:Y-m-d H:i:s"],
-                "template_id" => ["required", "string", "exists:templates,id"],
+                "template" => ["sometimes", "string",],
                 "contact_list_ids" => ["required", "array"],
                 "status" => ["required", "string", Rule::enum(CampaignStatusEnum::class)],
                 "meta" => ["sometimes", "array"]
@@ -42,7 +42,7 @@ class CampaignRequest extends FormRequest
                 "description" => ["sometimes", "string"],
                 "subject" => ["sometimes", "string"],
                 "send_time" => ["sometimes", "date_format:Y-m-d H:i:s"],
-                "template_id" => ["sometimes", "string", "exists:templates,id"],
+                "template" => ["sometimes", "string"],
                 "contact_list_ids" => ["sometimes", "array"],
                 "status" => ["sometimes", "string", Rule::enum(CampaignStatusEnum::class)],
                 "meta" => ["sometimes", "array"]

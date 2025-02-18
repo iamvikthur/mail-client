@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\CampaignStatusEnum;
 use App\Models\Campaign;
 use Illuminate\Support\Str;
 
@@ -46,9 +47,19 @@ class CampaignService extends Base
             unset($data["contact_list_ids"]);
         }
 
-        $updatedCampaign = $campaign->update($data);
+        if (isset($data['status']) && $data['status'] === CampaignStatusEnum::PUBLISHED) {
+            if ($campaign->template === null) {
+                return [false, CAMPAIGN_TEMPLATE_NOT_SET, [], 400];
+            }
+        }
 
-        return [true, MCH_model_updated("Campaign"), [$updatedCampaign], 200];
+        $campaign->update($data);
+
+        $campaign->refresh();
+
+        $campaign->publish_campaign();
+
+        return [true, MCH_model_updated("Campaign"), [$campaign], 200];
     }
 
     public function delete_campaign(Campaign $campaign)

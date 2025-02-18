@@ -22,10 +22,9 @@ class SendEmailBatchJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(array $smtpConfig, QuickMail $quickMail, array $recipients, array $emailData)
+    public function __construct(array $smtpConfig, array $recipients, array $emailData)
     {
         $this->smtpConfig = $smtpConfig;
-        $this->quickMail = $quickMail;
         $this->recipients = $recipients;
         $this->emailData = $emailData;
     }
@@ -35,7 +34,6 @@ class SendEmailBatchJob implements ShouldQueue
      */
     public function handle(): void
     {
-
         Mail::build($this->smtpConfig)
             ->to($this->recipients)
             ->send(new QuickMailable($this->emailData));

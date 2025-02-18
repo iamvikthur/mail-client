@@ -2,23 +2,22 @@
 
 namespace App\Jobs;
 
-use App\Models\QuickMail;
+use App\Models\Campaign;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class SendQuickMailJob implements ShouldQueue
+class DispatchCampaignMailJob implements ShouldQueue
 {
     use Queueable;
 
-    private QuickMail $quickMail;
+    private Campaign $campaign;
     private int $defaultMaxSendPerHour = 40;
-
     /**
      * Create a new job instance.
      */
-    public function __construct(QuickMail $quickMail)
+    public function __construct(Campaign $campaign)
     {
-        $this->quickMail = $quickMail;
+        $this->campaign = $campaign;
     }
 
     /**
@@ -26,13 +25,11 @@ class SendQuickMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $mailBox = $this->quickMail->mailbox;
+        $mailBox = $this->campaign->mailbox;
         $maxSendPerHour = $mailbox->meta->max_send ?? $this->defaultMaxSendPerHour;
         $delayBetweenBatches = 60;
-        $sendTime = max(0, now()->diffInSeconds($this->quickMail->send_time, false));
-        $recipients = collect();
-        $subject = $this->quickMail->subject;
-        $content = "";
+        $sendTime = max(0, now()->diffInSeconds($this->campaign->send_time, false));
+
         $smtpConfig = [
             'transport'  => 'smtp',
             'host'       => $mailBox->host,
@@ -46,36 +43,21 @@ class SendQuickMailJob implements ShouldQueue
             ],
         ];
 
-
-        if ($this->quickMail->has('template')) {
-            $content = $this->quickMail->template->longText;
-        }
-
-        if ($this->quickMail->body !== null) {
-            $content = $this->quickMail->body;
-        }
-
-
-        if ($this->quickMail->has('contactLists')) {
-            $recipients = $this->quickMail->contactLists->flatMap->contacts->pluck('email')->toArray();
-        }
-
-        if ($this->quickMail->recipients !== null) {
-            $recipients = $this->quickMail->recipients;
-        }
+        $recipients =  $this->campaign->contactLists->flatMap->contacts;
+        $emailBody = $this->campaign->template;
+        $subject = $this->campaign->subject;
 
         $emailData = [
             'subject' => $subject,
-            'content' => $content,
+            'content' => $emailBody,
         ];
-
 
         $chunks = array_chunk($recipients, $maxSendPerHour);
 
-        foreach ($chunks as $index => $emailBatch) {
+        foreach ($chunks as $index => $chunk) {
             $batchSendTime = max($sendTime, now())->addMinutes($index * $delayBetweenBatches);
 
-            SendEmailBatchJob::dispatch($smtpConfig, $emailBatch, $emailData)
+            SendEmailBatchJob::dispatch($smtpConfig, $chunk, $emailData)
                 ->delay($batchSendTime);
         }
     }

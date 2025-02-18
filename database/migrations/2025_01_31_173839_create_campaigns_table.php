@@ -15,10 +15,9 @@ return new class extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreignUlid('template_id')->references('id')->on('templates')->cascadeOnDelete();
+            $table->foreignUlid('mailbox_id')->references('id')->on('mailboxes')->cascadeOnDelete();
             $table->string('name');
             $table->string('slug');
-            $table->text('description')->nullable();
             $table->string('subject');
             $table->dateTime('send_time');
             $table->enum('status', [
@@ -27,6 +26,8 @@ return new class extends Migration
                 CampaignStatusEnum::ONGOING->value,
                 CampaignStatusEnum::SENT->value
             ])->default(CampaignStatusEnum::DRAFT->value);
+            $table->longText('template')->nullable();
+            $table->text('description')->nullable();
             $table->json('meta')->nullable();
             $table->$table->timestamps();
         });

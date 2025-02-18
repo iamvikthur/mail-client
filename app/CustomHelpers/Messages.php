@@ -1,5 +1,7 @@
 <?php
 
+const CAMPAIGN_TEMPLATE_NOT_SET = "Campaign template not set";
+
 if (!function_exists("MCH_model_created")) {
     function MCH_model_created(string $model = "Model")
     {
