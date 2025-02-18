@@ -33,6 +33,8 @@ class SendQuickMailJob implements ShouldQueue
         $attachments = $this->quickMail->attachments()->pluck('attachments')->toArray();
         $recipients = collect();
         $subject = $this->quickMail->subject;
+        $cc = $this->quickMail->cc ?? [];
+        $bcc = $this->quickMail->bcc ?? [];
         $content = "";
         $smtpConfig = [
             'transport'  => 'smtp',
@@ -68,6 +70,8 @@ class SendQuickMailJob implements ShouldQueue
         $emailData = [
             'subject' => $subject,
             'content' => $content,
+            'cc' => $cc,
+            'bcc' => $bcc,
         ];
 
 

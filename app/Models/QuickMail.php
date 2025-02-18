@@ -19,7 +19,9 @@ class QuickMail extends Model
     {
         return [
             'meta' => 'array',
-            'recipients' => 'array'
+            'recipients' => 'array',
+            'cc' => 'array',
+            'bcc' => 'array'
         ];
     }
 

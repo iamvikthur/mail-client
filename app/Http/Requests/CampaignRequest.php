@@ -34,6 +34,8 @@ class CampaignRequest extends FormRequest
                 "template" => ["sometimes", "string",],
                 "contact_list_ids" => ["required", "array"],
                 "status" => ["required", "string", Rule::enum(CampaignStatusEnum::class)],
+                "cc" => ["sometimes", "array"],
+                "bcc" => ["sometimes", "array"],
                 "meta" => ["sometimes", "array"]
             ],
 
@@ -45,6 +47,8 @@ class CampaignRequest extends FormRequest
                 "template" => ["sometimes", "string"],
                 "contact_list_ids" => ["sometimes", "array"],
                 "status" => ["sometimes", "string", Rule::enum(CampaignStatusEnum::class)],
+                "cc" => ["sometimes", "array"],
+                "bcc" => ["sometimes", "array"],
                 "meta" => ["sometimes", "array"]
             ],
 

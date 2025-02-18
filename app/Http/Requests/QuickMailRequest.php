@@ -35,6 +35,8 @@ class QuickMailRequest extends FormRequest
                 "contact_list_id" => ["required_without:recipients", "string"],
                 "send_ime" => ["sometimes", "date_format:Y-m-d H:i:s"],
                 "state" => ["sometimes", Rule::enum(QuickMailStateEnum::class)],
+                "cc" => ["sometimes", "array"],
+                "bcc" => ["sometimes", "array"],
                 "meta" => ["sometimes", "array"],
             ],
 
@@ -47,6 +49,8 @@ class QuickMailRequest extends FormRequest
                 "contact_list_id" => ["sometimes", "string"],
                 "send_ime" => ["sometimes", "date_format:Y-m-d H:i:s"],
                 "state" => ["sometimes", Rule::enum(QuickMailStateEnum::class)],
+                "cc" => ["sometimes", "array"],
+                "bcc" => ["sometimes", "array"],
                 "meta" => ["sometimes", "array"],
             ],
 

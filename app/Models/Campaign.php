@@ -20,7 +20,9 @@ class Campaign extends Model
     protected function casts(): array
     {
         return [
-            "meta" => "array"
+            "meta" => "array",
+            "cc" => "array",
+            "bcc" => "array"
         ];
     }
 

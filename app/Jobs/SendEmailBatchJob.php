@@ -37,6 +37,8 @@ class SendEmailBatchJob implements ShouldQueue
     {
         Mail::build($this->smtpConfig)
             ->to($this->recipients)
+            ->cc($this->emailData['cc'])
+            ->bcc($this->emailData['bcc'])
             ->send(new QuickMailable($this->emailData, $this->attachments));
     }
 }

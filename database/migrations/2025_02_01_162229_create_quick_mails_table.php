@@ -27,6 +27,8 @@ return new class extends Migration
                 QuickMailStateEnum::SENDING->value,
                 QuickMailStateEnum::FINISHED->value,
             ])->default(QuickMailStateEnum::DORMANT->value);
+            $table->json('cc')->nullable();
+            $table->json('bcc')->nullable();
             $table->json('meta')->nullable();
             $table->$table->timestamps();
         });

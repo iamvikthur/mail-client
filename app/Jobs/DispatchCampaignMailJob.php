@@ -30,6 +30,8 @@ class DispatchCampaignMailJob implements ShouldQueue
         $delayBetweenBatches = 60;
         $sendTime = max(0, now()->diffInSeconds($this->campaign->send_time, false));
         $attachments = $this->campaign->attachments()->pluck('attachments')->toArray();
+        $cc = $this->campaign->cc ?? [];
+        $bcc = $this->campaign->bcc ?? [];
 
         $smtpConfig = [
             'transport'  => 'smtp',
@@ -51,6 +53,8 @@ class DispatchCampaignMailJob implements ShouldQueue
         $emailData = [
             'subject' => $subject,
             'content' => $emailBody,
+            'cc' => $cc,
+            'bcc' => $bcc,
         ];
 
         $chunks = array_chunk($recipients, $maxSendPerHour);

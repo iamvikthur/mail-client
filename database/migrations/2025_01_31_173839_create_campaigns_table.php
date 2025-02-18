@@ -28,6 +28,8 @@ return new class extends Migration
             ])->default(CampaignStatusEnum::DRAFT->value);
             $table->longText('template')->nullable();
             $table->text('description')->nullable();
+            $table->json('cc')->nullable();
+            $table->json('bcc')->nullable();
             $table->json('meta')->nullable();
             $table->$table->timestamps();
         });

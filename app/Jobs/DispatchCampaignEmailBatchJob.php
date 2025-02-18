@@ -50,7 +50,9 @@ class DispatchCampaignEmailBatchJob implements ShouldQueue
 
             Mail::build($this->smtpConfig)
                 ->to($recipient)
-                ->send(new CampaignMailable($emailData));
+                ->cc($this->emailData['cc'])
+                ->bcc($this->emailData['bcc'])
+                ->send(new CampaignMailable($emailData, $this->attachments));
         }
     }
 }
