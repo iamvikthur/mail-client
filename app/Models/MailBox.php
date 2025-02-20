@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MailBox extends Model
@@ -22,5 +23,47 @@ class MailBox extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Accessor to decrypt password when retrieved
+    public function getImapPasswordAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
+    // Mutator to encrypt password when set
+    public function setImapPasswordAttribute($value)
+    {
+        $this->attributes['imap_password'] = Crypt::encryptString($value);
+    }
+
+    public function getSmtpPasswordAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
+    public function setSmtpPasswordAttribute($value)
+    {
+        $this->attributes['smtp_password'] = Crypt::encryptString($value);
+    }
+    public function smtp_details()
+    {
+        return [
+            "host" => $this->smtp_host,
+            "username" => $this->smtp_username,
+            "password" => $this->smtp_password,
+            "encryption" => $this->smtp_encryption,
+            "port" => $this->smtp_port
+        ];
+    }
+    public function imap_details()
+    {
+        return [
+            "host" => $this->imap_host,
+            "username" => $this->imap_username,
+            "password" => $this->imap_password,
+            "encryption" => $this->imap_encryption,
+            "port" => $this->imap_port
+        ];
     }
 }

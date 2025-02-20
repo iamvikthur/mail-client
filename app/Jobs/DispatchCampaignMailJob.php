@@ -33,18 +33,13 @@ class DispatchCampaignMailJob implements ShouldQueue
         $cc = $this->campaign->cc ?? [];
         $bcc = $this->campaign->bcc ?? [];
 
-        $smtpConfig = [
-            'transport'  => 'smtp',
-            'host'       => $mailBox->host,
-            'port'       => 587,
-            'encryption' => $mailBox->encryption ?? null,
-            'username'   => $mailBox->username,
-            'password'   => $mailBox->password,
-            'from'       => [
-                'address' => $mailBox->username,
-                'name'    => $mailBox->title,
-            ],
+        $smtpConfig = $mailBox->smtp_details();
+        $smtpConfig['transport'] = 'smtp';
+        $smtpConfig['from'] = [
+            'address' => $mailBox->username,
+            'name'    => $mailBox->title,
         ];
+
 
         $recipients =  $this->campaign->contactLists->flatMap->contacts;
         $emailBody = $this->campaign->template;

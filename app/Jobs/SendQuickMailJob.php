@@ -36,19 +36,13 @@ class SendQuickMailJob implements ShouldQueue
         $cc = $this->quickMail->cc ?? [];
         $bcc = $this->quickMail->bcc ?? [];
         $content = "";
-        $smtpConfig = [
-            'transport'  => 'smtp',
-            'host'       => $mailBox->host,
-            'port'       => 587,
-            'encryption' => $mailBox->encryption ?? null,
-            'username'   => $mailBox->username,
-            'password'   => $mailBox->password,
-            'from'       => [
-                'address' => $mailBox->username,
-                'name'    => $mailBox->title,
-            ],
-        ];
 
+        $smtpConfig = $mailBox->smtp_details();
+        $smtpConfig['transport'] = 'smtp';
+        $smtpConfig['from'] = [
+            'address' => $mailBox->username,
+            'name'    => $mailBox->title,
+        ];
 
         if ($this->quickMail->has('template')) {
             $content = $this->quickMail->template->longText;

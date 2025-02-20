@@ -26,20 +26,34 @@ class MailBoxRequest extends FormRequest
         $rules = match ($routeName) {
             "mailbox.store" => [
                 "title" => ["required", "string", "max:255"],
-                "host" => ["required", "string", "url"],
-                "port" => ["required", "string", "max:10"],
-                "username" => ["required", "string"],
-                "password" => ["required", "string"],
-                "encryption" => ["sometimes", "string"],
+                "smtp_host" => ["required", "string", "url"],
+                "smtp_port" => ["required", "string", "max:10"],
+                "smtp_username" => ["required", "string"],
+                "smtp_password" => ["required", "string"],
+                "smtp_encryption" => ["sometimes", "string"],
+
+                "imap_host" => ["sometimes", "string", "url"],
+                "imap_port" => ["sometimes", "string", "max:10"],
+                "imap_username" => ["sometimes", "string"],
+                "imap_password" => ["sometimes", "string"],
+                "imap_encryption" => ["sometimes", "string"],
+
                 "meta" => ["sometimes", "array"],
             ],
             "mailbox.update" => [
                 "title" => ["sometimes", "string", "max:255"],
-                "host" => ["sometimes", "string", "url"],
-                "port" => ["sometimes", "string", "max:10"],
-                "username" => ["sometimes", "string"],
-                "password" => ["sometimes", "string"],
-                "encryption" => ["sometimes", "string"],
+                "smtp_host" => ["sometimes", "string", "url"],
+                "smtp_port" => ["sometimes", "string", "max:10"],
+                "smtp_username" => ["sometimes", "string"],
+                "smtp_password" => ["sometimes", "string"],
+                "smtp_encryption" => ["sometimes", "string"],
+
+                "imap_host" => ["sometimes", "string", "url"],
+                "imap_port" => ["sometimes", "string", "max:10"],
+                "imap_username" => ["sometimes", "string"],
+                "imap_password" => ["sometimes", "string"],
+                "imap_encryption" => ["sometimes", "string"],
+
                 "meta" => ["sometimes", "array"],
             ],
 

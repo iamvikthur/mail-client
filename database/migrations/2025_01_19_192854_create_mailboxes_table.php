@@ -16,11 +16,19 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->string('title');
-            $table->string('host');
-            $table->string('port');
-            $table->string('username');
-            $table->string('password');
-            $table->string('encryption')->nullable();
+
+            $table->string('smtp_host');
+            $table->string('smtp_port');
+            $table->string('smtp_username');
+            $table->string('smtp_password');
+            $table->string('smtp_encryption')->nullable();
+
+            $table->string('imap_host')->nullable();
+            $table->string('imap_port')->nullable();
+            $table->string('imap_username')->nullable();
+            $table->string('imap_password')->nullable();
+            $table->string('imap_encryption')->nullable();
+
             $table->enum('state', [
                 MailboxStateEnum::ONLINE->value,
                 MailboxStateEnum::OFFLINE->value
