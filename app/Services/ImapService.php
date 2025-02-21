@@ -10,16 +10,13 @@ class ImapService
 {
     public function connect(MailBox $mailBox)
     {
-        $client = Client::make([
-            'host'          => $mailBox->imap_host,
-            'port'          => $mailBox->imap_port,
-            'encryption'    => $mailBox->imap_encryption,
-            'validate_cert' => true,
-            'username'      => $mailBox->imap_username,
-            'password'      => $mailBox->imap_password,
-            'protocol'      => 'imap'
-        ]);
+        $smtpDetails = $mailBox->smtp_details();
+        $smtpDetails['validate_cert'] = true;
+        $smtpDetails['protocol'] = 'imap';
+
+        $client = Client::make($smtpDetails);
         $client->connect();
+
         return $client;
     }
 
