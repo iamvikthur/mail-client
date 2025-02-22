@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\PersonalAccessToken;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // SANCTUM MODEL
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
     }
 }

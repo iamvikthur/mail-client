@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\GenerateOTP;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use Illuminate\Auth\Events\Registered;
+use App\Mail\VerifyEmailMailable;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -17,8 +19,10 @@ class RegisteredUserController extends Controller
     {
         $user = $registerRequest->signUp();
 
-        dispatch(function () use ($user) {
-            event(new Registered($user));
+        $token = (new GenerateOTP())->generate();
+
+        dispatch(function () use ($token, $user) {
+            Mail::to($user)->send(new VerifyEmailMailable($token, $user->firstname));
         })->delay(now());
 
 

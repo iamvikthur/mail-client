@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreignUlid('mailbox_id')->references('id')->on('mailboxes')->cascadeOnDelete();
+            $table->foreignUlid('mailbox_id')->references('id')->on('mail_boxes')->cascadeOnDelete();
             $table->string('name');
             $table->string('slug');
             $table->string('subject');
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->json('cc')->nullable();
             $table->json('bcc')->nullable();
             $table->json('meta')->nullable();
-            $table->$table->timestamps();
+            $table->timestamps();
         });
     }
 

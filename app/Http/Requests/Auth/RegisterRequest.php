@@ -30,7 +30,6 @@ class RegisterRequest extends RequestBase
             'firstname' => ['required', 'string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'phone' => ['required', 'regex:/^(\+234|234|0)(7|8|9)(0|1)\d{8}$/', 'unique:' . User::class],
         ];
 
         if (app()->environment(['production', 'staging'])) {
@@ -59,7 +58,6 @@ class RegisterRequest extends RequestBase
             'firstname' => $this->input('firstname'),
             'lastname' => $this->input('lastname'),
             'email' => $this->input('email'),
-            'phone' => $this->input('phone'),
             'password' => Hash::make($this->input('password')),
         ]);
     }

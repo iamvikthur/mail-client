@@ -36,7 +36,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/CustomHelpers/Messages.php",
+            "app/CustomHelpers/ResponseMessages.php",
             "app/CustomHelpers/Response.php"
         ]
     },
