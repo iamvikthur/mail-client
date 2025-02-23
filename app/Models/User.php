@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Actions\GenerateOTP;
+use App\Jobs\SendOneTimePasswordJob;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -25,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'lastname',
         'email',
         'password',
+        'email_verified_at'
     ];
 
     /**
@@ -55,6 +59,19 @@ class User extends Authenticatable implements MustVerifyEmail
         $token = $this->createToken($this->name . now())->plainTextToken;
 
         return $token;
+    }
+
+    public function markEmailAsVerified()
+    {
+        $this->updateQuietly(["email_verified_at" => now()]);
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $token = (new GenerateOTP())->generate();
+        $key = MCH_oneTimePasswordCacheKey($this->email);
+
+        dispatch(new SendOneTimePasswordJob($token, $key, $this))->delay(now());
     }
 
     public function mailBoxes(): HasMany

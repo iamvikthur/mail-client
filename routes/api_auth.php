@@ -28,15 +28,16 @@ Route::prefix('auth')->group(function () {
         ->name('password.store');
 
     // AUTH ENDPOINTS
-    Route::get('/verify-email', VerifyEmailController::class)
-        ->middleware(['email.signed', 'not.verified', 'throttle:6,1'])
-        ->name('verification.verify');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/verify-email', VerifyEmailController::class)
+            ->middleware(['not.verified', 'throttle:6,1'])
+            ->name('verification.verify');
 
-    Route::get('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware(['auth:sanctum', 'not.verified', 'throttle:6,1'])
-        ->name('verification.send');
+        Route::get('/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+            ->middleware(['not.verified', 'throttle:6,1'])
+            ->name('verification.send');
 
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->middleware('auth:sanctum')
-        ->name('logout');
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
+    });
 });

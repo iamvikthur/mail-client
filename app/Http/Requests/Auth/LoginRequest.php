@@ -27,10 +27,16 @@ class LoginRequest extends RequestBase
      */
     public function rules(): array
     {
-        return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ];
+        $routeName = $this->route()->getName();
+
+        $rules = match ($routeName) {
+            "login" => [
+                'email' => ['required', 'string', 'email'],
+                'password' => ['required', 'string'],
+            ],
+            default => [],
+        };
+        return $rules;
     }
 
     /**

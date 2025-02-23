@@ -3,25 +3,26 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\EmailVerificationRequest;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 
 class VerifyEmailController extends Controller
 {
     /**
      * Mark the authenticated user's email address as verified.
      */
-    public function __invoke(EmailVerificationRequest $request): RedirectResponse
+    public function __invoke(EmailVerificationRequest $emailVerificationRequest)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
-        }
+        $user = $emailVerificationRequest->user();
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
-        }
+        $user->markEmailAsVerified();
 
-        return redirect()->intended(route('dashboard', absolute: false).'?verified=1');
+        event(new Verified($user));
+
+        Cache::forget(MCH_oneTimePasswordCacheKey($user->email));
+
+        return send_response(true, [], MCH_ACCOUNT_VERIFIED);
     }
 }
