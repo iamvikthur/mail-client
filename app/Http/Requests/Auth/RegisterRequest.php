@@ -35,7 +35,9 @@ class RegisterRequest extends RequestBase
         if (app()->environment(['production', 'staging'])) {
             $rules['password'] = [
                 'required',
-                Password::min(8)->mixedCase()
+                Password::min(8)
+                    ->max(16)
+                    ->mixedCase()
                     ->numbers()
                     ->symbols()
                     ->uncompromised()

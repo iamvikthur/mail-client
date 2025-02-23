@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Actions\GenerateOTP;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Jobs\SendOneTimePasswordJob;
 use App\Mail\VerifyEmailMailable;
 use Illuminate\Support\Facades\Mail;
 
@@ -20,11 +21,9 @@ class RegisteredUserController extends Controller
         $user = $registerRequest->signUp();
 
         $token = (new GenerateOTP())->generate();
+        $key = MCH_oneTimePasswordCacheKey($user->email);
 
-        dispatch(function () use ($token, $user) {
-            Mail::to($user)->send(new VerifyEmailMailable($token, $user->firstname));
-        })->delay(now());
-
+        dispatch(new SendOneTimePasswordJob($token, $key, $user))->delay(now());
 
         $user->token = $user->generateAuthToken();
 

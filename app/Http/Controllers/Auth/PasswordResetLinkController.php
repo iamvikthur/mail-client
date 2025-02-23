@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Actions\GenerateOTP;
 use App\Http\Controllers\Controller;
-use App\Jobs\SendEmailJob;
+use App\Http\Requests\Auth\PasswordResetRequest;
+use App\Jobs\SendOneTimePasswordJob;
 use App\Models\User;
-use App\Services\Mail\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -17,30 +17,19 @@ class PasswordResetLinkController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(PasswordResetRequest $passwordResetRequest)
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-        ]);
 
-        $email = $request->email;
+        $email = $passwordResetRequest->validated()['email'];
 
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
-            return send_response(true, [], MCH_USER_NOT_FOUND_BUT_BE_SILENT);
-        }
-
         // send OTP
-        $otp = ""; // (new GenerateOTP())->generate();
-        $endpoint = 'api/email-verification';
-        $data = ["otp" => $otp];
+        $token = (new GenerateOTP())->generate();
+        $key = MCH_oneTimePasswordCacheKey($user->email);
 
-        // dispatch(new SendEmailJob($email, $endpoint, $data));
+        dispatch(new SendOneTimePasswordJob($token, $key, $user))->delay(now());
 
-        Cache::put(MCH_passwordResetCacheKey($email), $otp, now()->addMinutes(10));
-
-        $message = MCH_OTP_SENT_MESSAGE;
-        return send_response(true, [], $message);
+        return send_response(true, [], MCH_OTP_SENT_MESSAGE);
     }
 }

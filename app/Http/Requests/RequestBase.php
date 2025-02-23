@@ -17,7 +17,7 @@ class RequestBase extends FormRequest
         throw new ValidationException($validator, response()->json([
             'success' => false,
             'message' => 'Validation failed. Please check the input fields.',
-            'data' => ['error' => $errors],
+            'data' => ['errors' => $errors],
         ], 422));
     }
 }

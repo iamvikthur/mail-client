@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\PasswordResetRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
 
 class NewPasswordController extends Controller
 {
@@ -18,22 +19,15 @@ class NewPasswordController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(PasswordResetRequest $passwordResetRequest)
     {
-        $request->validate([
-            'token' => ['required'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $validatedRequest = $passwordResetRequest->validated();
+        $email = $validatedRequest['email'];
+        $token = $validatedRequest['token'];
+        $cacheKey = MCH_oneTimePasswordCacheKey($email);
 
-        $email = $request->email;
-        $token = $request->token;
         $user = User::where('email', $email)->first();
-        $otp = Cache::get(MCH_passwordResetCacheKey($email));
-
-        if (!$user) {
-            return send_response(false, [], MCH_INVALID_USER_EMAIL, 400);
-        }
+        $otp = Cache::get($cacheKey);
 
         if (!$otp) {
             return send_response(false, [], MCH_OTP_EXPIRED, 400);
@@ -44,11 +38,13 @@ class NewPasswordController extends Controller
         }
 
         $user->forceFill([
-            'password' => Hash::make($request->string('password')),
+            'password' => Hash::make($passwordResetRequest->string('password')),
             'remember_token' => Str::random(60),
         ])->save();
 
-        event(new PasswordReset($user));
+        // event(new PasswordReset($user));
+
+        Cache::forget($cacheKey);
 
         return send_response(true, [], MCH_PASSWORD_RESET_SUCCESS);
     }

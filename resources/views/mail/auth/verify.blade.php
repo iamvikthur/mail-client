@@ -1,7 +1,7 @@
 <x-mail::message>
 # Hello {{ $firstname }}
 
-We are pleased to have you on Lmail, please verify your email address with the token
+Use the code below to complete your action
 
 <h1>{{ $token }} </h1>
 

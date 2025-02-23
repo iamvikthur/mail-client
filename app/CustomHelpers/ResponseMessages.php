@@ -46,8 +46,8 @@ if (!function_exists("MCH_model_retrieved")) {
     }
 }
 
-if (!function_exists('MCH_passwordResetCacheKey')) {
-    function MCH_passwordResetCacheKey(string $email)
+if (!function_exists('MCH_oneTimePasswordCacheKey')) {
+    function MCH_oneTimePasswordCacheKey(string $email)
     {
         return "email-verification-key-$email";
     }
