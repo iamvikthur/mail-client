@@ -20,6 +20,6 @@ class RegisteredUserController extends Controller
 
         $user->token = $user->generateAuthToken();
 
-        return send_response(true, [$user], MCM_ACCOUNT_CREATION_SUCCESS);
+        return send_response(true, [$user], MCH_ACCOUNT_CREATION_SUCCESS);
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Models\PersonalAccessToken;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Auth\AuthenticationException;
 
 class AppServiceProvider extends ServiceProvider
 {

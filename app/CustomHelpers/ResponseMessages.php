@@ -15,7 +15,8 @@ const MCH_AUTH_USER_RETRIEVED = "Authenticated user retrieved successfully";
 const MCM_SIGN_IN_SUCCESS = "Sign in successful";
 const MCM_SIGN_OUT_SUCCESS = "Sign out successful";
 const MCH_PASSWORD_RESET_SUCCESS = "Password reset successful";
-const MCM_ACCOUNT_CREATION_SUCCESS = "Account created successfully";
+const MCH_ACCOUNT_CREATION_SUCCESS = "Account created successfully";
+const MCH_UNAUTHENTICATED = "You are unauthenticated. Please sign in";
 
 
 if (!function_exists("MCH_model_created")) {
