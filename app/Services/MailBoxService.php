@@ -19,15 +19,14 @@ class MailBoxService extends Base
     {
         $this->user->mailBoxes()->create($mailbox);
 
-        $mailbox = $this->user->load("mailboxes");
+        $userMailboxs = $this->user->mailBoxes()->get()->toArray();
 
-        return [true, MCH_model_created("Mailbox"), [$mailbox], 200];
+        return [true, MCH_model_created("Mailbox"), $userMailboxs, 200];
     }
 
     public function show_all()
     {
-
-        $mailboxes = $this->user->mailBoxes;
+        $mailboxes = $this->user->mailBoxes()->get()->toArray();
 
         return [true, MCH_model_retrieved("Mailboxes"), $mailboxes, 200];
     }

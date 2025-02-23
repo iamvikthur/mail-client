@@ -14,16 +14,9 @@ class MailBoxController extends Controller
      */
     public function index()
     {
-        $response = $this->mailBoxService->show_all();
-        return $response;
-    }
+        [$status, $message, $data, $status_code] = $this->mailBoxService->show_all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -31,26 +24,11 @@ class MailBoxController extends Controller
      */
     public function store(MailBoxRequest $mailBoxRequest)
     {
-        $response = $this->mailBoxService->create_mailbox(
+        [$status, $message, $data, $status_code] = $this->mailBoxService->create_mailbox(
             $mailBoxRequest->validated()
         );
-        return $response;
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -58,11 +36,12 @@ class MailBoxController extends Controller
      */
     public function update(MailBoxRequest $mailBoxRequest, MailBox $mailBox)
     {
-        $response = $this->mailBoxService->update_mailbox(
+        [$status, $message, $data, $status_code] = $this->mailBoxService->update_mailbox(
             $mailBox,
             $mailBoxRequest->validated()
         );
-        return $response;
+
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -70,7 +49,8 @@ class MailBoxController extends Controller
      */
     public function destroy(MailBox $mailBox)
     {
-        $response = $this->mailBoxService->delete_mailbox($mailBox);
-        return $response;
+        [$status, $message, $data, $status_code] = $this->mailBoxService->delete_mailbox($mailBox);
+
+        return send_response($status, $data, $message, $status_code);
     }
 }

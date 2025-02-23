@@ -17,6 +17,8 @@ const MCM_SIGN_OUT_SUCCESS = "Sign out successful";
 const MCH_PASSWORD_RESET_SUCCESS = "Password reset successful";
 const MCH_ACCOUNT_CREATION_SUCCESS = "Account created successfully";
 const MCH_UNAUTHENTICATED = "You are unauthenticated. Please sign in";
+const MCH_ACTION_UNAUTHORIZED = "Action unauthorized";
+const MCH_ACCOUNT_DELETE_OTP_MESSAGE = "To complete your action, enter the one time password sent to your email address";
 
 
 if (!function_exists("MCH_model_created")) {

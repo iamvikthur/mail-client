@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasUlids, HasApiTokens;
+    use HasFactory, Notifiable, HasUlids, HasApiTokens, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -54,7 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function generateAuthToken()
+    public function generateAuthToken(): string
     {
         $token = $this->createToken($this->name . now())->plainTextToken;
 
