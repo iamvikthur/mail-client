@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
 
+    // GUEST ENDPOINTS
     Route::post('/register', [RegisteredUserController::class, 'store'])
         ->middleware('guest:sanctum')
         ->name('register');
@@ -26,6 +27,7 @@ Route::prefix('auth')->group(function () {
         ->middleware('guest:sanctum')
         ->name('password.store');
 
+    // AUTH ENDPOINTS
     Route::get('/verify-email', VerifyEmailController::class)
         ->middleware(['email.signed', 'not.verified', 'throttle:6,1'])
         ->name('verification.verify');
