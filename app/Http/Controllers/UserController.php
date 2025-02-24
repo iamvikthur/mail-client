@@ -9,7 +9,11 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function __construct(private UserService $userService) {}
+    private UserService $userService;
+    public function __construct()
+    {
+        $this->userService = new UserService(request()->user());
+    }
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +31,7 @@ class UserController extends Controller
     {
         $validatedData = $userRequest->validated();
 
-        [$status, $data, $message, $status_code] = $this->userService->update($validatedData, $user);
+        [$status, $data, $message, $status_code] = $this->userService->update_user($validatedData, $user);
 
         return send_response($status, $data, $message, $status_code);
     }

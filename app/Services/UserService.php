@@ -16,8 +16,10 @@ class UserService
             throw new ActionUnauthorizedException();
         }
     }
-    public function update(array $data, User $user)
+    public function update_user(array $data, User $user)
     {
+        if (array_key_exists('email', $data)) unset($data['email']);
+
         $user->update($data);
         $user->refresh();
 

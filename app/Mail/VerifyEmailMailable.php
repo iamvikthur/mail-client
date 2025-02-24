@@ -30,7 +30,7 @@ class VerifyEmailMailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Verify Your Email Address',
+            subject: 'Your LoMail One Time Password',
         );
     }
 
