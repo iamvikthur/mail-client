@@ -25,12 +25,12 @@ class ContactFolderRequest extends FormRequest
 
         $rules = match ($routeName) {
 
-            "contact-folder.store" => [
+            "contact_folder.store" => [
                 "name" => ["required", "string", "max:255"],
                 "meta" => ["sometimes", "array"]
             ],
 
-            "contact.-folder.update" => [
+            "contact_folder.update" => [
                 "name" => ["sometimes", "string", "max:255"],
                 "meta" => ["sometimes", "array"]
             ],

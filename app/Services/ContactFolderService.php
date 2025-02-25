@@ -20,22 +20,24 @@ class ContactFolderService extends Base
 
     public function show_all_folders()
     {
-        $folders = $this->user->contactFolders;
+        $folders = $this->user->contactFolders()->get()->toArray();
 
         return [true, MCH_model_retrieved("Contact folders"), $folders, 200];
     }
 
     public function update_folder(ContactFolder $contactFolder, array $data)
     {
-        $updatedFolder = $contactFolder->update($data);
+        $contactFolder->update($data);
 
-        return [true, MCH_model_updated("Contact folder"), [$updatedFolder], 200];
+        $contactFolder->refresh();
+
+        return [true, MCH_model_updated("Contact folder"), [$contactFolder], 200];
     }
 
     public function delete_folder(ContactFolder $contactFolder)
     {
         $contactFolder->delete();
 
-        return [true, MCH_model_created("Contact folder"), [], 200];
+        return [true, MCH_model_deleted("Contact folder"), [], 200];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactFolderController;
 use App\Http\Controllers\MailBoxController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -19,10 +20,14 @@ Route::prefix('v1')->group(function () {
                 ->name('delete_account_verify');
         });
 
+        // MAILBOX
         Route::apiResource('mail_box', MailBoxController::class);
         Route::get('mail_box_check_state/{mail_box}', [
             MailBoxController::class,
             'check_mail_box_state'
         ])->name('mail_box.check_state');
+
+        // RECIPIENT
+        Route::apiResource('contact_folder', ContactFolderController::class);
     });
 });

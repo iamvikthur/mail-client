@@ -16,14 +16,8 @@ class ContactFolderController extends Controller
     public function index()
     {
         [$status, $message, $data, $status_code] = $this->contactFolderService->show_all_folders();
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -34,22 +28,8 @@ class ContactFolderController extends Controller
         [$status, $message, $data, $status_code] = $this->contactFolderService->create_folder(
             $contactFolderRequest->validated()
         );
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ContactFolder $contactFolder)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ContactFolder $contactFolder)
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -61,6 +41,8 @@ class ContactFolderController extends Controller
             $contactFolder,
             $contactFolderRequest->validated()
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -71,5 +53,7 @@ class ContactFolderController extends Controller
         [$status, $message, $data, $status_code] = $this->contactFolderService->delete_folder(
             $contactFolder
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 }
