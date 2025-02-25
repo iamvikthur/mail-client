@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\EmailSendingDetail;
+use App\Enums\MailboxStateEnum;
+use App\Mail\TestMailBoxMailable;
 use App\Models\MailBox;
-use App\Models\User;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class MailBoxService extends Base
 {
@@ -33,9 +33,11 @@ class MailBoxService extends Base
 
     public function update_mailbox(MailBox $mailBox, array $updateData)
     {
-        $updatedMailbox = $mailBox->update($updateData);
+        $mailBox->update($updateData);
 
-        return [true, MCH_model_updated("Mailbox"), [$updatedMailbox], 200];
+        $mailBox->refresh();
+
+        return [true, MCH_model_updated("Mailbox"), [$mailBox], 200];
     }
 
     public function delete_mailbox(MailBox $mailBox)
@@ -43,5 +45,28 @@ class MailBoxService extends Base
         $mailBox->delete();
 
         return [true, MCH_model_deleted("Mailbox"), [], 200];
+    }
+
+    public function check_mailbox_state(MailBox $mailBox)
+    {
+        $toMail = "iamvikthur@gmail.com";
+        $smtpConfig = $mailBox->smtp_details();
+        $smtpConfig['transport'] = 'smtp';
+        $fromAddress = $mailBox->smtp_username;
+        $fromName = $mailBox->title;
+
+        try {
+            Mail::build($smtpConfig)
+                ->to($toMail)
+                ->sendNow(new TestMailBoxMailable($fromAddress, $fromName));
+
+            $mailBox->update(['state' => MailboxStateEnum::ONLINE]);
+            return [true, "Mailbox is online", [$mailBox], 200];
+        } catch (\Throwable $th) {
+            // Log::error($th->getMessage());
+            $mailBox->update(['state' => MailboxStateEnum::OFFLINE]);
+            return [true, $th->getMessage(), [$mailBox], 500];
+            //throw $th;
+        }
     }
 }

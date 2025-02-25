@@ -1,21 +1,7 @@
 <?php
 
-use App\Http\Controllers\MailBoxController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
-
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
-
-Route::middleware(['auth',])->group(function () {
-    Route::resource('mailboxes', MailBoxController::class);
+Route::get('/', function () {
+    return env('APP_NAME') . " Visit " . env('FRONTEND_URL');
 });
-
-
-require __DIR__ . '/auth.php';

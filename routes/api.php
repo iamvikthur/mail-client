@@ -19,6 +19,10 @@ Route::prefix('v1')->group(function () {
                 ->name('delete_account_verify');
         });
 
-        Route::apiResource('mailbox', MailBoxController::class);
+        Route::apiResource('mail_box', MailBoxController::class);
+        Route::get('mail_box_check_state/{mail_box}', [
+            MailBoxController::class,
+            'check_mail_box_state'
+        ])->name('mail_box.check_state');
     });
 });

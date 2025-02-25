@@ -53,4 +53,11 @@ class MailBoxController extends Controller
 
         return send_response($status, $data, $message, $status_code);
     }
+
+    public function check_mail_box_state(MailBox $mailBox)
+    {
+        [$status, $message, $data, $status_code] = $this->mailBoxService->check_mailbox_state($mailBox);
+
+        return send_response($status, $data, $message, $status_code);
+    }
 }

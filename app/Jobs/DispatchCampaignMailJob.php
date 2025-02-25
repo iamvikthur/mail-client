@@ -36,7 +36,7 @@ class DispatchCampaignMailJob implements ShouldQueue
         $smtpConfig = $mailBox->smtp_details();
         $smtpConfig['transport'] = 'smtp';
         $smtpConfig['from'] = [
-            'address' => $mailBox->username,
+            'address' => $mailBox->smtp_username,
             'name'    => $mailBox->title,
         ];
 

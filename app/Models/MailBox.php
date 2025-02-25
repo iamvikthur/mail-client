@@ -28,23 +28,23 @@ class MailBox extends Model
     // Accessor to decrypt password when retrieved
     public function getImapPasswordAttribute($value)
     {
-        return Crypt::decryptString($value);
+        return $value ? Crypt::decryptString($value) : null;
     }
 
     // Mutator to encrypt password when set
     public function setImapPasswordAttribute($value)
     {
-        $this->attributes['imap_password'] = Crypt::encryptString($value);
+        $this->attributes['imap_password'] = $value ? Crypt::encryptString($value) : null;
     }
 
     public function getSmtpPasswordAttribute($value)
     {
-        return Crypt::decryptString($value);
+        return $value ? Crypt::decryptString($value) : null;
     }
 
     public function setSmtpPasswordAttribute($value)
     {
-        $this->attributes['smtp_password'] = Crypt::encryptString($value);
+        $this->attributes['smtp_password'] = $value ? Crypt::encryptString($value) : null;
     }
     public function smtp_details()
     {

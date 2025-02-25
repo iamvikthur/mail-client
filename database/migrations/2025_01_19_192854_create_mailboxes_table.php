@@ -19,13 +19,13 @@ return new class extends Migration
 
             $table->string('smtp_host');
             $table->string('smtp_port');
-            $table->string('smtp_username');
+            $table->string('smtp_username')->unique();
             $table->string('smtp_password');
             $table->string('smtp_encryption')->nullable();
 
             $table->string('imap_host')->nullable();
             $table->string('imap_port')->nullable();
-            $table->string('imap_username')->nullable();
+            $table->string('imap_username')->unique()->nullable();
             $table->string('imap_password')->nullable();
             $table->string('imap_encryption')->nullable();
 
