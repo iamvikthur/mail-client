@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactFolderController;
 use App\Http\Controllers\ContactListController;
 use App\Http\Controllers\MailBoxController;
@@ -32,5 +33,6 @@ Route::prefix('v1')->group(function () {
         // RECIPIENT
         Route::apiResource('contact_folder', ContactFolderController::class);
         Route::apiResource('contact_folder.contact_list', ContactListController::class);
+        Route::apiResource('contact_list.contact', ContactController::class);
     });
 });

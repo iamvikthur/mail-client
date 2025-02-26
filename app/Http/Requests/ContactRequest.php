@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class ContactRequest extends FormRequest
+class ContactRequest extends RequestBase
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,19 +23,22 @@ class ContactRequest extends FormRequest
     {
         $routeName = $this->route()->getName();
 
+        $contactListId = optional($this->route('contact_list'))->id;
+        $contactId = optional($this->route('contact'))->id;
+
         $rules = match ($routeName) {
-            "contact.store" => [
+            "contact_list.contact.store" => [
                 "firstname" => ["required_without:contact_file", "string", "max:255"],
                 "lastname" => ["required_without:contact_file", "string", "max:255"],
-                "email" => ["required_without:contact_file", "string", "email", "unique:contacts"],
-                "contact_file" => ["required_with_all:firstname,lastname,email", "file", "mimes:csv,xlsx"],
+                "email" => ["required_without:contact_file", "string", "email", Rule::unique('contacts')->where('contact_list_id', $contactListId)],
+                "contact_file" => ["required_without_all:firstname,lastname,email", "file", "mimes:csv,xlsx"],
                 "meta" => ["sometimes", "array"]
             ],
 
-            "contact.update" => [
+            "contact_list.contact.update" => [
                 "firstname" => ["sometimes", "string", "max:255"],
                 "lastname" => ["sometimes", "string", "max:255"],
-                "email" => ["sometimes", "string", "email", "unique:contacts"],
+                "email" => ["sometimes", "string", "email", Rule::unique('contacts')->where('contact_list_id', $contactListId)->ignore($contactId)],
                 "meta" => ["sometimes", "array"]
             ],
 
@@ -43,5 +46,12 @@ class ContactRequest extends FormRequest
         };
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            "email.unique" => "This contact list already has a contact with this email"
+        ];
     }
 }

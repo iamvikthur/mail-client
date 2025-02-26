@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class ContactService extends Base
 {
@@ -41,6 +42,8 @@ class ContactService extends Base
         }
 
         $contacts = $contactList->contacts()->create($data);
+
+        $contacts = $contactList->contacts()->get()->toArray();
 
         return [true, MCH_model_created("Contact"), $contacts, 200];
     }
@@ -83,11 +86,13 @@ class ContactService extends Base
                 $lastname = $this->sanitizeFirstOrLastName($lastname);
                 $email = $this->sanitizeEmail($email);
 
+                // dd($firstname, $lastname, $email);
+
                 $this->validateData([
                     "firstname" => $firstname,
                     "lastname" => $lastname,
                     "email" => $email
-                ], $key);
+                ], $key, $contactList->id);
 
                 $contactList->contacts()->create(
                     [
@@ -104,10 +109,13 @@ class ContactService extends Base
             }
         }
 
-        $returnData = $contactList->contacts()->get();
-        $returnData->merge(["skipped_rows" => $skippedRows]);
+        $contactListContacts = $contactList->contacts()->get()->toArray();
+        $returnData = [
+            "contacts" => $contactListContacts,
+            "skipped_rows" => $skippedRows
+        ];
 
-        return $returnData->toArray();
+        return $returnData;
     }
 
     private function sanitizeFirstOrLastName(string $firstname): string
@@ -122,12 +130,12 @@ class ContactService extends Base
         return Str::lower(trim($email));
     }
 
-    private function validateData(array $data, int $rowNumber)
+    private function validateData(array $data, int $rowNumber, $contactListId)
     {
         $rules = [
             'firstname' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'lastname' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|' . Rule::unique('contacts')->where('contact_list_id', $contactListId),
         ];
 
         $messages = [
@@ -137,7 +145,7 @@ class ContactService extends Base
             'firstname.regex' => "The firstname must contain only letters and spaces on row $rowNumber ...skipped",
             'email.required' => "The email field is required on row $rowNumber ...skipped",
             'email.email' => "The email must be a valid email address on row $rowNumber ...skipped",
-            'email.unique' => "The email has already been taken on row $rowNumber ...skipped",
+            'email.unique' => "This contact list already has a contact with this email on row $rowNumber ...skipped",
         ];
 
         // Validate the data
@@ -150,16 +158,18 @@ class ContactService extends Base
 
     public function show_all_contacts(ContactList $contactList): array
     {
-        $contactLists = $contactList->contacts;
+        $contactLists = $contactList->contacts()->get()->toArray();
 
         return [true, MCH_model_retrieved("Contacts"), $contactLists, 200];
     }
 
     public function update_contact(Contact $contact, array $data)
     {
-        $updatedContactList = $contact->update($data);
+        $contact->update($data);
 
-        return [true, MCH_model_updated("Contact"), [$updatedContactList], 200];
+        $contact->refresh();
+
+        return [true, MCH_model_updated("Contact"), [$contact], 200];
     }
 
     public function delete_contact(Contact $contact)

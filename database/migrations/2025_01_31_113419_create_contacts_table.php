@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUlid('contact_list_id')->references('id')->on('contact_lists')->cascadeOnDelete();
             $table->string('firstname');
             $table->string('lastname');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->json('meta')->nullable();
             $table->timestamps();
         });
