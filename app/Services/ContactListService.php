@@ -16,27 +16,29 @@ class ContactListService extends Base
     {
         $contactList = $contactFolder->contactLists()->create($data);
 
-        return [true, MCH_model_created("Contact list"), $contactList, 200];
+        return [true, MCH_model_created("Contact list"), [$contactList], 200];
     }
 
     public function show_all_contact_lists(ContactFolder $contactFolder): array
     {
-        $contactLists = $contactFolder->contactLists;
+        $contactLists = $contactFolder->contactLists()->get()->toArray();
 
         return [true, MCH_model_retrieved("Contact lists"), $contactLists, 200];
     }
 
     public function update_contact_list(ContactList $contactList, array $data)
     {
-        $updatedContactList = $contactList->update($data);
+        $contactList->update($data);
 
-        return [true, MCH_model_updated("Contact list"), [$updatedContactList], 200];
+        $contactList->refresh();
+
+        return [true, MCH_model_updated("Contact list"), [$contactList], 200];
     }
 
     public function delete_contact_list(ContactList $contactList)
     {
         $contactList->delete();
 
-        return [true, MCH_model_created("Contact list"), [], 200];
+        return [true, MCH_model_deleted("Contact list"), [], 200];
     }
 }

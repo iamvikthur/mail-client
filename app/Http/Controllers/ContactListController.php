@@ -19,14 +19,8 @@ class ContactListController extends Controller
         [$status, $message, $data, $status_code] = $this->contactListService->show_all_contact_lists(
             $contactFolder
         );
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -38,42 +32,32 @@ class ContactListController extends Controller
             $contactFolder,
             $contactListRequest->validated()
         );
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ContactList $contactList)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ContactList $contactList)
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ContactListRequest $contactListRequest, ContactList $contactList)
+    public function update(ContactListRequest $contactListRequest, ContactFolder $contactFolder, ContactList $contactList)
     {
         [$status, $message, $data, $status_code] = $this->contactListService->update_contact_list(
             $contactList,
             $contactListRequest->validated()
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ContactList $contactList)
+    public function destroy(ContactFolder $contactFolder, ContactList $contactList)
     {
         [$status, $message, $data, $status_code] = $this->contactListService->delete_contact_list(
             $contactList
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 }

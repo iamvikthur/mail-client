@@ -20,7 +20,7 @@ class ContactFolderService extends Base
 
     public function show_all_folders()
     {
-        $folders = $this->user->contactFolders()->get()->toArray();
+        $folders = $this->user->contactFolders()->with('contactLists')->get()->toArray();
 
         return [true, MCH_model_retrieved("Contact folders"), $folders, 200];
     }

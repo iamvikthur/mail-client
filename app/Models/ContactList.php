@@ -13,7 +13,9 @@ class ContactList extends Model
 {
     use HasUlids, HasFactory;
 
-    protected $fillable = ['id'];
+    protected $guarded = ['id'];
+
+    protected $hidden = ['updated_at'];
 
     protected function casts(): array
     {

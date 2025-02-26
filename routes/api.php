@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactFolderController;
+use App\Http\Controllers\ContactListController;
 use App\Http\Controllers\MailBoxController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
+        // USER
         Route::apiResource('/user', UserController::class)->only(
             ['index', 'update']
         );
@@ -29,5 +31,6 @@ Route::prefix('v1')->group(function () {
 
         // RECIPIENT
         Route::apiResource('contact_folder', ContactFolderController::class);
+        Route::apiResource('contact_folder.contact_list', ContactListController::class);
     });
 });
