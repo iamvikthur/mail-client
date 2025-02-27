@@ -13,7 +13,7 @@ class TemplateService extends Base
 
     public function create_template(array $data)
     {
-        $data['slug'] = $this->generateUniqueSlug($data['name'], new Template());
+        $data['slug'] = $this->generateUniqueSlug($data['title'], new Template());
 
         $template = $this->user->templates()->create($data);
 
@@ -22,16 +22,18 @@ class TemplateService extends Base
 
     public function show_all_templates()
     {
-        $templates = $this->user->templates()->get();
+        $templates = $this->user->templates()->get()->toArray();
 
         return [true, MCH_model_retrieved("Templates"), $templates, 200];
     }
 
     public function update_template(Template $template, array $data)
     {
-        $updatedTemplate = $template->update($data);
+        $template->update($data);
 
-        return [true, MCH_model_updated("Template"), $updatedTemplate, 200];
+        $template->refresh();
+
+        return [true, MCH_model_updated("Template"), [$template], 200];
     }
 
     public function delete_template(Template $template)

@@ -4,6 +4,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactFolderController;
 use App\Http\Controllers\ContactListController;
 use App\Http\Controllers\MailBoxController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('contact_folder', ContactFolderController::class);
         Route::apiResource('contact_folder.contact_list', ContactListController::class);
         Route::apiResource('contact_list.contact', ContactController::class);
+
+        // TEMPLATE
+        Route::apiResource('template', TemplateController::class);
     });
 });

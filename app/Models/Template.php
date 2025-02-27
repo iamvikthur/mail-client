@@ -11,7 +11,7 @@ class Template extends Model
 {
     use HasUlids, HasFactory;
 
-    protected $fillable = ['id'];
+    protected $guarded = ['id'];
 
     protected function casts(): array
     {

@@ -10,20 +10,15 @@ use Illuminate\Http\Request;
 class TemplateController extends Controller
 {
     public function __construct(private TemplateService $templateService) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         [$status, $message, $data, $status_code] = $this->templateService->show_all_templates();
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -34,22 +29,8 @@ class TemplateController extends Controller
         [$status, $message, $data, $status_code] = $this->templateService->create_template(
             $templateRequest->validated()
         );
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Template $template)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Template $template)
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -61,6 +42,8 @@ class TemplateController extends Controller
             $template,
             $templateRequest->validated()
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -71,5 +54,7 @@ class TemplateController extends Controller
         [$status, $message, $data, $status_code] = $this->templateService->delete_template(
             $template
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 }
