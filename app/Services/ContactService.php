@@ -176,6 +176,6 @@ class ContactService extends Base
     {
         $contact->delete();
 
-        return [true, MCH_model_created("Contact"), [], 200];
+        return [true, MCH_model_deleted("Contact"), [], 200];
     }
 }
