@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class QuickMail extends Model
 {
     use HasUlids, HasFactory;
 
-    protected $fillable = ['id'];
+    protected $guarded = ['id'];
 
     protected function casts(): array
     {
@@ -30,14 +31,14 @@ class QuickMail extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function template(): HasOne
+    public function template(): BelongsTo
     {
-        return $this->hasOne(Template::class);
+        return $this->belongsTo(Template::class);
     }
 
-    public function mailbox(): HasOne
+    public function mailBox(): BelongsTo
     {
-        return $this->hasOne(Mailbox::class);
+        return $this->belongsTo(Mailbox::class);
     }
 
     public function contactLists(): BelongsToMany
@@ -45,8 +46,8 @@ class QuickMail extends Model
         return $this->belongsToMany(ContactList::class, "contact_list_quick_mail");
     }
 
-    public function attachmentable()
+    public function attachments(): MorphMany
     {
-        return $this->morphToMany(EmailAttachment::class, "attachmentable");
+        return $this->morphMany(EmailAttachment::class, "attachmentable");
     }
 }
