@@ -16,7 +16,7 @@ class CampaignMailable extends Mailable
 
     public $subject;
     public $content;
-    protected $attachments;
+    public $attachments;
 
     /**
      * Create a new message instance.
@@ -44,7 +44,7 @@ class CampaignMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            html: $this->content,
+            htmlString: $this->content,
         );
     }
 

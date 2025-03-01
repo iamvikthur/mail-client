@@ -2,9 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Enums\QuickMailStateEnum;
 use App\Models\QuickMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 
 class SendQuickMailJob implements ShouldQueue
 {
@@ -26,11 +28,13 @@ class SendQuickMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $mailBox = $this->quickMail->mailbox;
+        $mailBox = $this->quickMail->mailBox;
         $maxSendPerHour = $mailbox->meta->max_send ?? $this->defaultMaxSendPerHour;
         $delayBetweenBatches = 60;
         $sendTime = max(0, now()->diffInSeconds($this->quickMail->send_time, false));
-        $attachments = $this->quickMail->attachments()->pluck('attachments')->toArray();
+        $attachments = $this->quickMail->has('attachments') ?
+            $this->quickMail->attachments()->pluck('attachment')->toArray() :
+            [];
         $recipients = collect();
         $subject = $this->quickMail->subject;
         $cc = $this->quickMail->cc ?? [];
@@ -45,7 +49,7 @@ class SendQuickMailJob implements ShouldQueue
         ];
 
         if ($this->quickMail->has('template')) {
-            $content = $this->quickMail->template->longText;
+            $content = optional($this->quickMail->template)->template;
         }
 
         if ($this->quickMail->body !== null) {
@@ -72,10 +76,19 @@ class SendQuickMailJob implements ShouldQueue
         $chunks = array_chunk($recipients, $maxSendPerHour);
 
         foreach ($chunks as $index => $emailBatch) {
-            $batchSendTime = max($sendTime, now())->addMinutes($index * $delayBetweenBatches);
 
-            SendEmailBatchJob::dispatch($smtpConfig, $emailBatch, $emailData, $attachments)
+            $batchSendTime = max($sendTime, now()->diffInSeconds(now()->addMinutes($index * $delayBetweenBatches)));
+
+            SendEmailBatchJob::dispatch(
+                $smtpConfig,
+                $emailBatch,
+                $emailData,
+                $attachments,
+                $this->quickMail
+            )
                 ->delay($batchSendTime);
         }
+
+        $this->quickMail->update(["state" => QuickMailStateEnum::INQUEUE]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\QuickMailStateEnum;
 use App\Models\QuickMail;
 
 class QuickMailService extends Base
@@ -15,7 +16,7 @@ class QuickMailService extends Base
     {
         if (isset($data['template_id'])) {
             if (!$this->canUseTemplate($data['template_id'])) {
-                throw new \Exception('You are not authorized to use this template');
+                return [false, "You are not authorized to use this template", [], 400];
             }
         }
 
@@ -34,8 +35,12 @@ class QuickMailService extends Base
     {
         if (isset($data["template_id"])) {
             if (!$this->canUseTemplate($data["template_id"])) {
-                throw new \Exception('You are not authorized to use this template');
+                return [false, "You are not authorized to use this template", [], 400];
             }
+        }
+
+        if ($quickMail->state !== QuickMailStateEnum::DORMANT) {
+            return [false, "This mail batch has either finished, or in queue", [], 400];
         }
 
         $quickMail->update($data);

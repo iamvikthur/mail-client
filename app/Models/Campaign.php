@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Campaign extends Model
 {
@@ -41,7 +42,7 @@ class Campaign extends Model
         return $this->belongsToMany(ContactList::class, "campaign_contact_list");
     }
 
-    public function attachments()
+    public function attachments(): MorphMany
     {
         return $this->morphMany(EmailAttachment::class, "attachmentable");
     }

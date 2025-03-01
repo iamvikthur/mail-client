@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('quick_mails', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreignUlid('mailbox_id')->references('id')->on('mail_boxes')->cascadeOnDelete();
+            $table->foreignUlid('mail_box_id')->references('id')->on('mail_boxes')->cascadeOnDelete();
             $table->foreignUlid('template_id')->nullable()->references('id')->on('templates')->cascadeOnDelete();
             $table->string('subject');
             $table->longText('body')->nullable();

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\PersonalAccessToken;
+use App\Models\QuickMail;
+use App\Observers\QuickMailObserver;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Auth\AuthenticationException;
@@ -24,5 +26,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // SANCTUM MODEL
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+
+        // OBSERVER
+        QuickMail::observe(QuickMailObserver::class);
     }
 }

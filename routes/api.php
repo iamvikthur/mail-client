@@ -4,6 +4,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactFolderController;
 use App\Http\Controllers\ContactListController;
 use App\Http\Controllers\MailBoxController;
+use App\Http\Controllers\QuickMailController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -38,5 +39,8 @@ Route::prefix('v1')->group(function () {
 
         // TEMPLATE
         Route::apiResource('template', TemplateController::class);
+
+        // QUICK MAILS
+        Route::apiResource('quick_mail', QuickMailController::class);
     });
 });

@@ -27,13 +27,13 @@ class QuickMailRequest extends FormRequest
 
         $rules = match ($routeName) {
             "quick_mail.store" => [
-                "mailbox_id" => ["required", "string", "exists:mailboxes,id"],
+                "mail_box_id" => ["required", "string", "exists:mail_boxes,id"],
                 "template_id" => ["required_without:body", "string", "exists:templates,id"],
                 "subject" => ["required", "string", "max:255"],
                 "body" => ["required_without:template_id", "string"],
-                "recipients" => ["required_without:contact_list_id", "string"],
+                "recipients" => ["required_without:contact_list_id", "array"],
                 "contact_list_id" => ["required_without:recipients", "string"],
-                "send_ime" => ["sometimes", "date_format:Y-m-d H:i:s"],
+                "send_time" => ["sometimes", "date_format:Y-m-d H:i:s"],
                 "state" => ["sometimes", Rule::enum(QuickMailStateEnum::class)],
                 "cc" => ["sometimes", "array"],
                 "bcc" => ["sometimes", "array"],
@@ -41,13 +41,13 @@ class QuickMailRequest extends FormRequest
             ],
 
             "quick_mails.update" => [
-                "mailbox_id" => ["sometimes", "string", "exists:mailboxes,id"],
+                "mail_box_id" => ["sometimes", "string", "exists:mail_boxes,id"],
                 "template_id" => ["sometimes", "string", "exists:templates,id"],
                 "subject" => ["sometimes", "string", "max:255"],
                 "body" => ["sometimes", "string"],
-                "recipients" => ["sometimes", "string"],
+                "recipients" => ["sometimes", "array"],
                 "contact_list_id" => ["sometimes", "string"],
-                "send_ime" => ["sometimes", "date_format:Y-m-d H:i:s"],
+                "send_time" => ["sometimes", "date_format:Y-m-d H:i:s"],
                 "state" => ["sometimes", Rule::enum(QuickMailStateEnum::class)],
                 "cc" => ["sometimes", "array"],
                 "bcc" => ["sometimes", "array"],

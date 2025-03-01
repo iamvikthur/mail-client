@@ -16,14 +16,8 @@ class QuickMailController extends Controller
     public function index()
     {
         [$status, $message, $data, $status_code] = $this->quickMailService->show_all_quick_mails();
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -34,22 +28,8 @@ class QuickMailController extends Controller
         [$status, $message, $data, $status_code] = $this->quickMailService->create_quick_mail(
             $quickMailRequest->validated()
         );
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(QuickMail $quickMail)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(QuickMail $quickMail)
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -61,6 +41,8 @@ class QuickMailController extends Controller
             $quickMail,
             $quickMailRequest->validated()
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -71,5 +53,7 @@ class QuickMailController extends Controller
         [$status, $message, $data, $status_code] = $this->quickMailService->delete_quick_mail(
             $quickMail
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 }
