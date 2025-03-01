@@ -25,11 +25,11 @@ class DispatchCampaignMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $mailBox = $this->campaign->mailbox;
+        $mailBox = $this->campaign->mailBox;
         $maxSendPerHour = $mailbox->meta->max_send ?? $this->defaultMaxSendPerHour;
         $delayBetweenBatches = 60;
         $sendTime = max(0, now()->diffInSeconds($this->campaign->send_time, false));
-        $attachments = $this->campaign->attachments()->pluck('attachments')->toArray();
+        $attachments = $this->campaign->attachments()->pluck('attachment')->toArray();
         $cc = $this->campaign->cc ?? [];
         $bcc = $this->campaign->bcc ?? [];
 
@@ -41,7 +41,7 @@ class DispatchCampaignMailJob implements ShouldQueue
         ];
 
 
-        $recipients =  $this->campaign->contactLists->flatMap->contacts;
+        $recipients =  $this->campaign->contactLists->flatMap->contacts->toArray();
         $emailBody = $this->campaign->template;
         $subject = $this->campaign->subject;
 
@@ -55,7 +55,8 @@ class DispatchCampaignMailJob implements ShouldQueue
         $chunks = array_chunk($recipients, $maxSendPerHour);
 
         foreach ($chunks as $index => $chunk) {
-            $batchSendTime = max($sendTime, now())->addMinutes($index * $delayBetweenBatches);
+
+            $batchSendTime = max($sendTime, now()->diffInSeconds(now()->addMinutes($index * $delayBetweenBatches)));
 
             DispatchCampaignEmailBatchJob::dispatch($smtpConfig, $chunk, $emailData, $attachments)
                 ->delay($batchSendTime);

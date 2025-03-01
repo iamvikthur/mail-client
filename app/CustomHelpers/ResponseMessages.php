@@ -56,3 +56,10 @@ if (!function_exists('MCH_oneTimePasswordCacheKey')) {
         return "email-verification-key-$email";
     }
 }
+
+if (!function_exists('MCH_enumRetrieved')) {
+    function MCH_enumRetrieved(string $enum)
+    {
+        return "$enum enum retrieved";
+    }
+}

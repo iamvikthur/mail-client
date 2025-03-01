@@ -16,7 +16,7 @@ class Campaign extends Model
 {
     use HasUlids, HasFactory;
 
-    protected $fillable = ['id'];
+    protected $guarded = ['id'];
 
     protected function casts(): array
     {
@@ -32,9 +32,9 @@ class Campaign extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function mailbox(): HasOne
+    public function mailBox(): BelongsTo
     {
-        return $this->hasOne(Mailbox::class);
+        return $this->belongsTo(Mailbox::class);
     }
 
     public function contactLists(): BelongsToMany
@@ -49,7 +49,7 @@ class Campaign extends Model
 
     public function publish_campaign()
     {
-        if ($this->status !== CampaignStatusEnum::PUBLISHED) return;
+        if ($this->status !== CampaignStatusEnum::PUBLISHED->value) return;
 
         dispatch(new DispatchCampaignMailJob($this));
     }

@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -14,18 +15,20 @@ class CampaignMailable extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $subject;
-    public $content;
-    public $attachments;
+    public $campaignSubject;
+    public $campaignContent;
+    public $campaignAttachments;
+    public $smtpConfig;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $emailData, array $attachments)
+    public function __construct(array $emailData, array $attachments, array $smtpConfig)
     {
-        $this->subject = $emailData['subject'];
-        $this->content = $emailData['content'];
-        $this->attachments = $attachments;
+        $this->campaignSubject = $emailData['subject'];
+        $this->campaignContent = $emailData['content'];
+        $this->campaignAttachments = $attachments;
+        $this->smtpConfig = $smtpConfig;
     }
 
     /**
@@ -35,6 +38,10 @@ class CampaignMailable extends Mailable
     {
         return new Envelope(
             subject: $this->subject,
+            from: new Address(
+                $this->smtpConfig['from']['address'],
+                $this->smtpConfig['from']['name']
+            )
         );
     }
 
@@ -44,7 +51,7 @@ class CampaignMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            htmlString: $this->content,
+            htmlString: $this->campaignContent,
         );
     }
 

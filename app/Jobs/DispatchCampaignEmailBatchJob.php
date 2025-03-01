@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Mail\CampaignMailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class DispatchCampaignEmailBatchJob implements ShouldQueue
@@ -39,20 +40,22 @@ class DispatchCampaignEmailBatchJob implements ShouldQueue
         $emailBody = $this->emailData['content'];
 
         foreach ($this->recipients as $key => $recipient) {
-            str_replace($firstnameVariable, $recipient->firstname, $emailBody);
-            str_replace($lastnameVariable, $recipient->lastname, $emailBody);
-            str_replace($emailVariable, $recipient->email, $emailBody);
+            str_replace($firstnameVariable, $recipient['firstname'], $emailBody);
+            str_replace($lastnameVariable, $recipient['lastname'], $emailBody);
+            str_replace($emailVariable, $recipient['email'], $emailBody);
 
             $emailData = [
                 "subject" => $this->emailData['subject'],
                 "content" => $emailBody
             ];
 
+            Log::info("RECEPIENTS", [$recipient['email']]);
+
             Mail::build($this->smtpConfig)
-                ->to($recipient)
+                ->to($recipient['email'])
                 ->cc($this->emailData['cc'])
                 ->bcc($this->emailData['bcc'])
-                ->send(new CampaignMailable($emailData, $this->attachments));
+                ->send(new CampaignMailable($emailData, $this->attachments, $this->smtpConfig));
         }
     }
 }

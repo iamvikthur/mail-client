@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactFolderController;
 use App\Http\Controllers\ContactListController;
 use App\Http\Controllers\MailBoxController;
+use App\Http\Controllers\MiscController;
 use App\Http\Controllers\QuickMailController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
@@ -42,5 +44,11 @@ Route::prefix('v1')->group(function () {
 
         // QUICK MAILS
         Route::apiResource('quick_mail', QuickMailController::class);
+
+        //  CAMPAIGNS
+        Route::apiResource('campaign', CampaignController::class);
     });
+
+    // MISC
+    Route::get('campaign-status-enums', [MiscController::class, 'get_campaign_statuses']);
 });

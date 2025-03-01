@@ -16,14 +16,8 @@ class CampaignController extends Controller
     public function index()
     {
         [$status, $message, $data, $status_code] = $this->campaignService->show_all_campaigns();
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -34,22 +28,8 @@ class CampaignController extends Controller
         [$status, $message, $data, $status_code] = $this->campaignService->create_campaign(
             $campaignRequest->validated()
         );
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Campaign $campaign)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Campaign $campaign)
-    {
-        //
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -61,6 +41,8 @@ class CampaignController extends Controller
             $campaign,
             $campaignRequest->validated()
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 
     /**
@@ -71,5 +53,7 @@ class CampaignController extends Controller
         [$status, $message, $data, $status_code] = $this->campaignService->delete_campaign(
             $campaign
         );
+
+        return send_response($status, $data, $message, $status_code);
     }
 }
