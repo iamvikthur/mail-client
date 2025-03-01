@@ -1,6 +1,6 @@
 <?php
 
-const CAMPAIGN_TEMPLATE_NOT_SET = "Campaign template not set";
+const MCH_CAMPAIGN_TEMPLATE_NOT_SET = "Campaign template not set";
 
 const MCH_OTP_EXPIRED = "OTP expires after 10mins";
 const MCH_INVALID_USER_EMAIL = "User with email address not found";
@@ -20,6 +20,7 @@ const MCH_UNAUTHENTICATED = "You are unauthenticated. Please sign in";
 const MCH_ACTION_UNAUTHORIZED = "Action unauthorized";
 const MCH_ACCOUNT_DELETE_OTP_MESSAGE = "To complete your action, enter the one time password sent to your email address";
 const MCH_EMAIL_NOT_VERIFIED = "Your email address is not verified.";
+const MCH_CANNOT_DELETE_CAMPAIGN = "You cannot delete a campaign that is not a draft";
 
 
 if (!function_exists("MCH_model_created")) {

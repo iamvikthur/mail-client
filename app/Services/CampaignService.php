@@ -49,7 +49,7 @@ class CampaignService extends Base
 
         if (isset($data['status']) && $data['status'] === CampaignStatusEnum::PUBLISHED->value) {
             if ($campaign->template === null) {
-                return [false, CAMPAIGN_TEMPLATE_NOT_SET, [], 400];
+                return [false, MCH_CAMPAIGN_TEMPLATE_NOT_SET, [], 400];
             }
         }
 
@@ -64,8 +64,8 @@ class CampaignService extends Base
 
     public function delete_campaign(Campaign $campaign): array
     {
-        if ($campaign->status !== CampaignStatusEnum::DRAFT) {
-            return [false, CAMPAIGN_TEMPLATE_NOT_SET, [], 400];
+        if ($campaign->status !== CampaignStatusEnum::DRAFT->value) {
+            return [false, MCH_CANNOT_DELETE_CAMPAIGN, [], 400];
         }
 
         $campaign->delete();
