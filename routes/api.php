@@ -4,6 +4,7 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContactFolderController;
 use App\Http\Controllers\ContactListController;
+use App\Http\Controllers\ImapController;
 use App\Http\Controllers\MailBoxController;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\QuickMailController;
@@ -47,6 +48,15 @@ Route::prefix('v1')->group(function () {
 
         //  CAMPAIGNS
         Route::apiResource('campaign', CampaignController::class);
+
+        // INBOX
+        ROute::prefix('imap')->group(function () {
+            Route::get('get-folders/{mail_box}', [ImapController::class, 'index']);
+            Route::get('get-mails/{mail_box}', [ImapController::class, 'get_mails']);
+            Route::get('get-mail-details/{mail_box}', [ImapController::class, 'get_email_details']);
+            Route::get('move-email/{mail_box}', [ImapController::class, 'move_email']);
+            Route::get('delete-email/{mail_box}', [ImapController::class, 'delete_email']);
+        });
     });
 
     // MISC
