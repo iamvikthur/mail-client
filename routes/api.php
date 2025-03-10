@@ -51,6 +51,7 @@ Route::prefix('v1')->group(function () {
 
         // INBOX
         ROute::prefix('imap')->group(function () {
+            Route::get('test-connection', [ImapController::class, 'test_connection']);
             Route::get('get-folders/{mail_box}', [ImapController::class, 'index']);
             Route::get('get-mails/{mail_box}', [ImapController::class, 'get_mails']);
             Route::get('get-mail-details/{mail_box}', [ImapController::class, 'get_email_details']);

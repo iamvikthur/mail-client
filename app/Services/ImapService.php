@@ -128,6 +128,18 @@ class ImapService
         }
     }
 
+    public function testConnection(MailBox $mailBox)
+    {
+        try {
+            $this->connect($mailBox);
+            return [true, "Connection test successful", [$mailBox], 200];
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+            return [false, "Connection test failed", [$mailBox], 400];
+            //throw $th;
+        }
+    }
+
     private function categorizeFolders($folders)
     {
         $categorized = [];
