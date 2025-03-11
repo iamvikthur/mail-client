@@ -51,12 +51,13 @@ Route::prefix('v1')->group(function () {
 
         // INBOX
         ROute::prefix('imap')->group(function () {
-            Route::get('test-connection', [ImapController::class, 'test_connection']);
+            Route::get('test-connection/{mail_box}', [ImapController::class, 'test_connection']);
             Route::get('get-folders/{mail_box}', [ImapController::class, 'index']);
-            Route::get('get-mails/{mail_box}', [ImapController::class, 'get_mails']);
-            Route::get('get-mail-details/{mail_box}', [ImapController::class, 'get_email_details']);
-            Route::get('move-email/{mail_box}', [ImapController::class, 'move_email']);
-            Route::get('delete-email/{mail_box}', [ImapController::class, 'delete_email']);
+            Route::get('get-mails/{mail_box}/{folder}', [ImapController::class, 'get_mails']);
+            Route::get('get-mail-details/{mail_box}/{folder}/{messageId}', [ImapController::class, 'get_email_details']);
+            Route::get('move-email/{mail_box}/{messageId}/{fromFolder}/{toFolder}', [ImapController::class, 'move_email']);
+            Route::get('delete-email/{mail_box}/{messageId}/{folder}', [ImapController::class, 'delete_email']);
+            Route::post('create-folder/{mail_box}', [ImapController::class, 'create_folder'])->name('imap.folder.create');
         });
     });
 

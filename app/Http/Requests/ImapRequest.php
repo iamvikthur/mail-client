@@ -25,7 +25,7 @@ class ImapRequest extends FormRequest
 
         $rules = match ($routeName) {
             "imap.folder.create" => [
-                'name' => ['required', 'string']
+                'folder_name' => ['required', 'string']
             ],
             default => [],
         };

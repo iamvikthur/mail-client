@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ImapController extends Controller
 {
-    protected function __construct(private ImapService $imapService) {}
+    public function __construct(private ImapService $imapService) {}
     public function index(MailBox $mailBox)
     {
         [$status, $message, $data, $status_code] = $this->imapService->getFolders($mailBox);
@@ -19,7 +19,7 @@ class ImapController extends Controller
 
     public function create_folder(ImapRequest $imapRequest, MailBox $mailBox)
     {
-        $name = $imapRequest->validated()['name'];
+        $name = $imapRequest->validated()['folder_name'];
         [$status, $message, $data, $status_code] = $this->imapService->createFolder($mailBox, $name);
 
         return send_response($status, $data, $message, $status_code);
@@ -41,9 +41,9 @@ class ImapController extends Controller
         return send_response($status, $data, $message, $status_code);
     }
 
-    public function move_email(MailBox $mailBox, int $messageId, string $fromFolder, string $toFolder)
+    public function move_email(MailBox $mailBox, int $messageId, string $fromFolder, string $toFolderPath)
     {
-        [$status, $message, $data, $status_code] = $this->imapService->moveEmail($mailBox, $messageId, $fromFolder, $toFolder);
+        [$status, $message, $data, $status_code] = $this->imapService->moveEmail($mailBox, $messageId, $fromFolder, $toFolderPath);
 
         return send_response($status, $data, $message, $status_code);
     }

@@ -25,13 +25,25 @@ class MailBox extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Accessor to decrypt password when retrieved
+    public function setSmtpHostAttribute($value)
+    {
+        $this->attributes['smtp_host'] = $value
+            ? preg_replace("~^(?:https?://)?(?:www\.)?~", '', $value)
+            : $value;
+    }
+
+    public function setImapHostAttribute($value)
+    {
+        $this->attributes['imap_host'] = $value
+            ? preg_replace("~^(?:https?://)?(?:www\.)?~", '', $value)
+            : $value;
+    }
+
     public function getImapPasswordAttribute($value)
     {
         return $value ? Crypt::decryptString($value) : null;
     }
 
-    // Mutator to encrypt password when set
     public function setImapPasswordAttribute($value)
     {
         $this->attributes['imap_password'] = $value ? Crypt::encryptString($value) : null;

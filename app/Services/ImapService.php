@@ -10,7 +10,7 @@ class ImapService
 {
     public function connect(MailBox $mailBox)
     {
-        $smtpDetails = $mailBox->smtp_details();
+        $smtpDetails = $mailBox->imap_details();
         $smtpDetails['validate_cert'] = true;
         $smtpDetails['protocol'] = 'imap';
 
@@ -26,8 +26,9 @@ class ImapService
             $client = $this->connect($mailBox);
             $folders = $client->getFolders();
             $client->disconnect();
+            // Log::info("FOLDERS", $folders->toArray());
             $categorizedFolders =  $this->categorizeFolders($folders);
-            return [true, "", $categorizedFolders, 200];
+            return [true, MCH_model_retrieved("Folders"), $categorizedFolders, 200];
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return [true, "", [], 500];
@@ -40,20 +41,25 @@ class ImapService
         try {
             $client = $this->connect($mailBox);
             $folder = $client->getFolder($folderName);
+            // Log::info("MESSAGES", $folder->messages()->all()->limit($perPage, ($page - 1) * $perPage)->get()->toArray());
             $messages = $folder->messages()->all()->limit($perPage, ($page - 1) * $perPage)->get();
+
             $client->disconnect();
             $messagesCollection = $messages->map(function ($message) {
                 return [
                     'uid' => $message->getUid(),
-                    'subject' => $message->getSubject(),
-                    'from' => $message->getFrom()[0]->mail,
-                    'date' => $message->getDate(),
+                    'subject' => $this->decodeSubject($message->getSubject()),
+                    'body' => $message->getHTMLBody() ?: $message->getTextBody(),
+                    'from' => $message->getFrom()[0]->mail ?? 'Unknown',
+                    'date' => $message->getDate() instanceof \Carbon\Carbon
+                        ? $message->getDate()->format('Y-m-d H:i:s')
+                        : (string) $message->getDate(),
                 ];
             })->toArray();
-            return [true, "", $messagesCollection, 200];
+            return [true, MCH_model_retrieved("Mailbox Emails"), $messagesCollection, 200];
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return [true, "", [], 500];
+            return [true, $th->getMessage(), [], 500];
             //throw $th;
         }
     }
@@ -81,19 +87,21 @@ class ImapService
         }
     }
 
-    public function moveEmail(MailBox $mailBox, int $messageId, string $fromFolder, string $toFolder)
+    public function moveEmail(MailBox $mailBox, int $messageId, string $fromFolder, string $toFolderPath)
     {
         try {
             $client = $this->connect($mailBox);
             $folder = $client->getFolder($fromFolder);
             $message = $folder->messages()->getMessageByUid($messageId);
-            $message->move($toFolder);
+
+            $message->move($toFolderPath);
+
             $client->disconnect();
 
-            return [true, "", [], 200];
+            return [true, "Email moved successfully", [], 200];
         } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-            return [true, "", [], 500];
+            Log::error($th->getMessage(), [$th]);
+            return [false, $th->getMessage(), [], 500];
             //throw $th;
         }
     }
@@ -107,10 +115,10 @@ class ImapService
             $message->delete();
             $client->disconnect();
 
-            return [true, "", [], 200];
+            return [true, "Email deleted", [], 200];
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return [true, "", [], 500];
+            return [false, $th->getMessage(), [], 500];
             //throw $th;
         }
     }
@@ -119,12 +127,18 @@ class ImapService
     {
         try {
             $client = $this->connect($mailBox);
+
             $client->createFolder($folderName);
+
             $client->disconnect();
 
-            return [true, "", [], 200];
+            return [true, MCH_model_created("Folder"), [], 200];
         } catch (\Throwable $th) {
-            return [false, "", [], 500];
+            $msg = $th->getMessage() === "BAD No mailbox selected (0.001 + 0.000 secs). )"
+                ? "Folder has been created, please check your folders"
+                : $th->getMessage();
+
+            return [false, $msg, [], 500];
         }
     }
 
@@ -134,8 +148,8 @@ class ImapService
             $this->connect($mailBox);
             return [true, "Connection test successful", [$mailBox], 200];
         } catch (\Throwable $th) {
-            Log::info($th->getMessage());
-            return [false, "Connection test failed", [$mailBox], 400];
+            Log::info($th->getMessage(), [$th]);
+            return [false, $th->getMessage(), [$mailBox], 400];
             //throw $th;
         }
     }
@@ -149,6 +163,8 @@ class ImapService
                 'name' => $folder->name,
                 'path' => $folder->path,
                 'category' => $category,
+                'has_children' => $folder->has_children,
+                'children' => $this->categorizeFolders($folder->children ?? []),
             ];
         }
         return $categorized;
@@ -163,5 +179,14 @@ class ImapService
         if (strpos($name, 'drafts') !== false) return 'drafts';
         if (strpos($name, 'trash') !== false) return 'trash';
         return 'other';
+    }
+
+    private function decodeSubject($subject)
+    {
+        $decoded = '';
+        foreach (imap_mime_header_decode($subject) as $part) {
+            $decoded .= $part->text;
+        }
+        return mb_convert_encoding($decoded, 'UTF-8', 'UTF-8, ISO-8859-1, Windows-1252');
     }
 }

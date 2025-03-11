@@ -34,7 +34,7 @@ class MailBoxRequest extends FormRequest
                 "smtp_password" => ["required", "string"],
                 "smtp_encryption" => ["sometimes", "string"],
 
-                "imap_host" => ["sometimes", "string", "url"],
+                "imap_host" => ["required_with_all:imap_port,imap_username,imap_password,imap_encryption", "string", "url"],
                 "imap_port" => ["sometimes", "string", "max:10"],
                 "imap_username" => ["sometimes", "string", "unique:mail_boxes,imap_username"],
                 "imap_password" => ["sometimes", "string"],
