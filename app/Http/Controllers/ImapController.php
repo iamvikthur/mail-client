@@ -61,4 +61,11 @@ class ImapController extends Controller
 
         return send_response($status, $data, $message, $status_code);
     }
+
+    public function delete_folder(MailBox $mailBox, $folderPath)
+    {
+        [$status, $message, $data, $status_code] = $this->imapService->deleteAFolder($mailBox, $folderPath);
+
+        return send_response($status, $data, $message, $status_code);
+    }
 }

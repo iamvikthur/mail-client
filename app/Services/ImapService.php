@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\MailBox;
 use Illuminate\Support\Facades\Log;
 use Webklex\IMAP\Facades\Client;
+use Webklex\PHPIMAP\Config;
 
 class ImapService
 {
@@ -127,18 +128,30 @@ class ImapService
     {
         try {
             $client = $this->connect($mailBox);
-
-            $client->createFolder($folderName);
+            $client->createFolder($folderName, false);
 
             $client->disconnect();
 
             return [true, MCH_model_created("Folder"), [], 200];
         } catch (\Throwable $th) {
-            $msg = $th->getMessage() === "BAD No mailbox selected (0.001 + 0.000 secs). )"
-                ? "Folder has been created, please check your folders"
+            $msg = str_contains($th->getMessage(), "BAD No mailbox selected")
+                ? "Folder might have been created, please check your folders"
                 : $th->getMessage();
 
             return [false, $msg, [], 500];
+        }
+    }
+
+    public function deleteAFolder(MailBox $mailBox, $folderPath)
+    {
+        try {
+            $client = $this->connect($mailBox);
+
+            $client->deleteFolder($folderPath, false);
+            return [true, MCH_model_deleted("Folder"), [], 200];
+        } catch (\Throwable $th) {
+            return [false, $th->getMessage(), [], 500];
+            //throw $th;
         }
     }
 

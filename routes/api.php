@@ -58,6 +58,7 @@ Route::prefix('v1')->group(function () {
             Route::get('move-email/{mail_box}/{messageId}/{fromFolder}/{toFolder}', [ImapController::class, 'move_email']);
             Route::get('delete-email/{mail_box}/{messageId}/{folder}', [ImapController::class, 'delete_email']);
             Route::post('create-folder/{mail_box}', [ImapController::class, 'create_folder'])->name('imap.folder.create');
+            Route::get('delete-folder/{mail_box}/{folder_path}', [ImapController::class, 'delete_folder']);
         });
     });
 
