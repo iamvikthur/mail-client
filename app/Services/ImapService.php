@@ -99,7 +99,7 @@ class ImapService
 
             $client->disconnect();
 
-            return [true, "Email moved successfully", [], 200];
+            return [true, MCH_EMAIL_MOVED, [], 200];
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [$th]);
             return [false, $th->getMessage(), [], 500];
@@ -116,7 +116,7 @@ class ImapService
             $message->delete();
             $client->disconnect();
 
-            return [true, "Email deleted", [], 200];
+            return [true, MCH_EMAIL_DELETED, [], 200];
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return [false, $th->getMessage(), [], 500];
@@ -134,8 +134,8 @@ class ImapService
 
             return [true, MCH_model_created("Folder"), [], 200];
         } catch (\Throwable $th) {
-            $msg = str_contains($th->getMessage(), "BAD No mailbox selected")
-                ? "Folder might have been created, please check your folders"
+            $msg = str_contains($th->getMessage(), MCH_BAD_NO_MAILBOX)
+                ? MCH_FOLDER_MIGHT_CREATED
                 : $th->getMessage();
 
             return [false, $msg, [], 500];
@@ -159,7 +159,7 @@ class ImapService
     {
         try {
             $this->connect($mailBox);
-            return [true, "Connection test successful", [$mailBox], 200];
+            return [true, MCH_CONNECTION_TEST_SUCCESS, [$mailBox], 200];
         } catch (\Throwable $th) {
             Log::info($th->getMessage(), [$th]);
             return [false, $th->getMessage(), [$mailBox], 400];

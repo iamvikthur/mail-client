@@ -21,6 +21,11 @@ const MCH_ACTION_UNAUTHORIZED = "Action unauthorized";
 const MCH_ACCOUNT_DELETE_OTP_MESSAGE = "To complete your action, enter the one time password sent to your email address";
 const MCH_EMAIL_NOT_VERIFIED = "Your email address is not verified.";
 const MCH_CANNOT_DELETE_CAMPAIGN = "You cannot delete a campaign that is not a draft";
+const MCH_EMAIL_MOVED = "Email moved successfully";
+const MCH_EMAIL_DELETED = "Email deleted";
+const MCH_CONNECTION_TEST_SUCCESS = "Connection test successful";
+const MCH_BAD_NO_MAILBOX = "BAD No mailbox selected";
+const MCH_FOLDER_MIGHT_CREATED = "Folder might have been created, please check your folders";
 
 
 if (!function_exists("MCH_model_created")) {
