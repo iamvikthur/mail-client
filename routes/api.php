@@ -62,6 +62,8 @@ Route::prefix('v1')->group(function () {
         });
     });
 
+    Route::post('send-otp', []);
+
     // MISC
     Route::get('campaign-status-enums', [MiscController::class, 'get_campaign_statuses']);
 });
